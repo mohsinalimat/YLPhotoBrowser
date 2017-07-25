@@ -33,9 +33,12 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
     
     func percentForGesture(_ gesture: UIPanGestureRecognizer) -> CGFloat {
         
-        let translation = gesture.translation(in: gesture.view)
-        var scale = 1 - fabs(translation.y / YLScreenH)
+        let offset = (gesture.view?.center.y)! - YLScreenH / 2
+        
+        var scale = 1 - fabs(offset / YLScreenH)
         scale = scale < 0 ? 0:scale
+        
+        print("interactive:\(scale)")
         
         return scale
     }
@@ -43,8 +46,6 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
     func gestureRecognizeDidUpdate(_ gestureRecognizer: UIPanGestureRecognizer) {
         
         let scrale = percentForGesture(gestureRecognizer)
-        
-        print("interactive \(scrale)")
         
         if isFirst {
             beginInterPercent()

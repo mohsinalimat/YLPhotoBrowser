@@ -35,6 +35,10 @@ class YLAnimatedTransition: NSObject,UINavigationControllerDelegate {
     private var customPop:YLPopAnimator = YLPopAnimator()
     private var percentIntractive:YLDrivenInteractive = YLDrivenInteractive()
     
+    deinit {
+        print("")
+    }
+    
     // 转场过渡的图片
     func setTransitionImgView(_ transitionImgView: UIImageView) {
         customPush.transitionImgView = transitionImgView
