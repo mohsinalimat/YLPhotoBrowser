@@ -15,32 +15,51 @@ let YLScreenW = UIScreen.main.bounds.width
 let YLScreenH = UIScreen.main.bounds.height
 
 class YLPhotoBrowser: UIViewController {
+    // 图片
+    private var photos: [YLPhoto]?
+    // 代理
+    private var delegate: UIViewController?
     
-    private var animatedTransition:YLAnimatedTransition?
+    private var appearAnimatedTransition:YLAnimatedTransition? // 进来的动画
+    private var disappearAnimatedTransition:YLAnimatedTransition? // 出去的动画
     
     private var transitionImgViewCenter = CGPoint.zero
     
     var imageView: UIImageView!
     
+    
     override func viewDidAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        super.viewDidAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: animated)
+        super.viewDidDisappear(animated)
+        delegate?.navigationController?.setNavigationBarHidden(false, animated: animated)
+        navigationController?.delegate = nil
+        delegate?.navigationController?.delegate = nil
+        delegate = nil
+        appearAnimatedTransition = nil
+        disappearAnimatedTransition = nil
     }
     
     deinit {
-        animatedTransition = nil
-        imageView = nil
+        print("释放:\(self)")
     }
     
-    convenience init() {
+    convenience init(_ target:Any,photos: [YLPhoto],index: Int) {
         self.init()
         
+        let photo = photos[index]
         
+         let height = YLScreenW * ((photo.image?.size.height)! / (photo.image?.size.width)!)
+        
+        appearAnimatedTransition = nil
+        appearAnimatedTransition = YLAnimatedTransition.init(photo.image!, beforeImgFrame: photo.frame!, afterImgFrame: CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height))
+        
+        delegate = (target as! UIViewController)
+        
+        delegate?.navigationController?.delegate = appearAnimatedTransition
     }
     
     override func viewDidLoad() {
@@ -66,32 +85,41 @@ class YLPhotoBrowser: UIViewController {
         
         let translation = pan.translation(in:  pan.view?.superview)
         
-        let offset = (pan.view?.center.y)! - YLScreenH / 2
+        let offsetY = (pan.view?.center.y)! - YLScreenH / 2
         
-        var scale = 1 - fabs(offset / YLScreenH)
+        var scale = 1 - fabs(offsetY / YLScreenH)
         
         scale = scale < 0 ? 0:scale
-        
-        print("scale:\(scale)")
         
         switch pan.state {
         case .possible:
             break
         case .began:
-            animatedTransition = nil
-            animatedTransition = YLAnimatedTransition()
-            navigationController?.delegate = animatedTransition
-            animatedTransition?.gestureRecognizer = pan
             
-            self.navigationController?.popViewController(animated: true)
+            disappearAnimatedTransition = nil
+            disappearAnimatedTransition = YLAnimatedTransition()
+            disappearAnimatedTransition?.gestureRecognizer = pan
+            navigationController?.delegate = disappearAnimatedTransition
+            (self.navigationController)!.popViewController(animated: true)
             
             break
         case .changed:
 
-            imageView.transform = CGAffineTransform.init(scaleX: scale, y: scale)
+            let ts =  pan.translation(in:  pan.view)
+            let absX = fabs(ts.x)
+            let absY = fabs(ts.y)
             
-            imageView.center = CGPoint.init(x: imageView.center.x + translation.x, y: imageView.center.y + translation.y)
-            pan.setTranslation(CGPoint.zero, in: pan.view?.superview)
+            if absY < 10 && absX > 10 {
+                return
+            }else
+                if ts.y > 0 {
+            
+                imageView.transform = CGAffineTransform.init(scaleX: scale, y: scale)
+                
+                imageView.center = CGPoint.init(x: imageView.center.x + translation.x, y: imageView.center.y + translation.y)
+                pan.setTranslation(CGPoint.zero, in: pan.view?.superview)
+                
+            }
             
             break
         case .failed,.cancelled,.ended:
@@ -111,27 +139,13 @@ class YLPhotoBrowser: UIViewController {
                 self.imageView.isHidden = true
             }
             
-            animatedTransition?.currentImageView = imageView
-            animatedTransition?.currentImageViewFrame = imageView.frame
-            animatedTransition?.beforeImageViewFrame = CGRect.init(x: 10, y: 100, width: YLScreenW / 2 - 20, height: YLScreenW / 2 - 20)
+            disappearAnimatedTransition?.currentImage = imageView.image
+            disappearAnimatedTransition?.currentImageViewFrame = imageView.frame
+            disappearAnimatedTransition?.beforeImageViewFrame = CGRect.init(x: 10, y: 100, width: YLScreenW / 2 - 20, height: YLScreenW / 2 - 20)
             
-            break
-        default:
             break
         }
         
     }
     
 }
-
-
-
-
-
-
-
-
-
-
-
-

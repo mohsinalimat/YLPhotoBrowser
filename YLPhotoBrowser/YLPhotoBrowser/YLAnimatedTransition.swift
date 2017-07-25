@@ -20,9 +20,9 @@ class YLAnimatedTransition: NSObject,UINavigationControllerDelegate {
             percentIntractive.currentImageViewFrame = currentImageViewFrame
         }
     }
-    var currentImageView: UIImageView! {
+    var currentImage: UIImage! {
         didSet {
-            percentIntractive.currentImageView = currentImageView
+            percentIntractive.currentImage = currentImage
         }
     }
     var gestureRecognizer: UIPanGestureRecognizer! {
@@ -36,24 +36,32 @@ class YLAnimatedTransition: NSObject,UINavigationControllerDelegate {
     private var percentIntractive:YLDrivenInteractive = YLDrivenInteractive()
     
     deinit {
-        print("")
+        print("释放:\(self)")
+    }
+    
+    convenience init(_ image: UIImage,beforeImgFrame: CGRect ,afterImgFrame: CGRect) {
+        self.init()
+        
+        setTransitionImage(image)
+        setTransitionBeforeImgFrame(beforeImgFrame)
+        setTransitionAfterImgFrame(afterImgFrame)
     }
     
     // 转场过渡的图片
-    func setTransitionImgView(_ transitionImgView: UIImageView) {
-        customPush.transitionImgView = transitionImgView
-        customPop.transitionImgView = transitionImgView
+    private func setTransitionImage(_ transitionImage: UIImage) {
+        customPush.transitionImage = transitionImage
+        customPop.transitionImage = transitionImage
     }
     
     // 转场前的图片frame
-    func setTransitionBeforeImgFrame(_ frame: CGRect) {
+    private func setTransitionBeforeImgFrame(_ frame: CGRect) {
         customPush.transitionBeforeImgFrame = frame
         customPop.transitionBeforeImgFrame = frame
         percentIntractive.beforeImageViewFrame = frame
     }
     
     // 转场后的图片frame
-    func setTransitionAfterImgFrame(_ frame: CGRect) {
+    private func setTransitionAfterImgFrame(_ frame: CGRect) {
         customPush.transitionAfterImgFrame = frame
         customPop.transitionAfterImgFrame = frame
     }

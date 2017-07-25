@@ -12,7 +12,7 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
     
     var beforeImageViewFrame: CGRect = CGRect.zero
     var currentImageViewFrame: CGRect = CGRect.zero
-    var currentImageView: UIImageView!
+    var currentImage: UIImage!
     
     var gestureRecognizer: UIPanGestureRecognizer! {
         didSet {
@@ -28,7 +28,8 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
     private var isFirst = true
     
     deinit {
-        gestureRecognizer.removeTarget(self, action: #selector(YLDrivenInteractive.gestureRecognizeDidUpdate(_:)))
+        print("释放:\(self)")
+        gestureRecognizer = nil
     }
     
     func percentForGesture(_ gesture: UIPanGestureRecognizer) -> CGFloat {
@@ -37,8 +38,6 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
         
         var scale = 1 - fabs(offset / YLScreenH)
         scale = scale < 0 ? 0:scale
-        
-        print("interactive:\(scale)")
         
         return scale
     }
@@ -131,7 +130,7 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
         if let containerView = transitionContext?.containerView {
             
             // 过度的图片
-            let transitionImgView = UIImageView.init(image: currentImageView.image)
+            let transitionImgView = UIImageView.init(image: currentImage)
             transitionImgView.clipsToBounds = true
             transitionImgView.frame = currentImageViewFrame
             containerView.addSubview(transitionImgView)

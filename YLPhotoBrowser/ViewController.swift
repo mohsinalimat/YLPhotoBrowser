@@ -36,13 +36,12 @@ class ViewController: UIViewController {
     
         let imgView = tap.view as! UIImageView
         
-        navigationController?.delegate = animatedTransition
+        var photos = [YLPhoto]()
+        photos.append(YLPhoto.addImage(imgView.image!, frame: imgView.frame))
         
-        animatedTransition.setTransitionImgView(imgView)
-        animatedTransition.setTransitionBeforeImgFrame(imgView.frame)
-        animatedTransition.setTransitionAfterImgFrame(CGRect.init(x: 0, y: 84, width: YLScreenW, height: YLScreenW))
+        let photoBrowser = YLPhotoBrowser.init(self, photos: photos, index: 0)
         
-        navigationController?.pushViewController(YLPhotoBrowser(), animated: true)
+        navigationController?.pushViewController(photoBrowser, animated: true)
     }
     
     override func didReceiveMemoryWarning() {

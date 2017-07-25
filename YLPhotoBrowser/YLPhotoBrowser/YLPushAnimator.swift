@@ -10,7 +10,7 @@ import UIKit
 
 class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
     
-    var transitionImgView: UIImageView!
+    var transitionImage: UIImage!
     var transitionBeforeImgFrame: CGRect = CGRect.zero
     var transitionAfterImgFrame: CGRect = CGRect.zero
  
@@ -41,7 +41,7 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         containerView.addSubview(bgView)
         
         // 过渡的图片
-        let transitionImgView = UIImageView.init(image: self.transitionImgView.image)
+        let transitionImgView = UIImageView.init(image: self.transitionImage)
         transitionImgView.frame = self.transitionBeforeImgFrame
         containerView.addSubview(transitionImgView)
         

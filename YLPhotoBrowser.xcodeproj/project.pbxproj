@@ -18,6 +18,7 @@
 		79829DA11F26DECB009D3F61 /* YLPushAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829DA01F26DECB009D3F61 /* YLPushAnimator.swift */; };
 		79829DA31F26DEFE009D3F61 /* YLPopAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829DA21F26DEFE009D3F61 /* YLPopAnimator.swift */; };
 		79829DA51F26E076009D3F61 /* YLDrivenInteractive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829DA41F26E076009D3F61 /* YLDrivenInteractive.swift */; };
+		81B0DF021F27699300049E1C /* YLPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B0DF011F27699300049E1C /* YLPhoto.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		79829DA01F26DECB009D3F61 /* YLPushAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPushAnimator.swift; sourceTree = "<group>"; };
 		79829DA21F26DEFE009D3F61 /* YLPopAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPopAnimator.swift; sourceTree = "<group>"; };
 		79829DA41F26E076009D3F61 /* YLDrivenInteractive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLDrivenInteractive.swift; sourceTree = "<group>"; };
+		81B0DF011F27699300049E1C /* YLPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhoto.swift; sourceTree = "<group>"; };
 		C04C4D4C948817C78C8A7B3C /* Pods-YLPhotoBrowser.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YLPhotoBrowser.release.xcconfig"; path = "Pods/Target Support Files/Pods-YLPhotoBrowser/Pods-YLPhotoBrowser.release.xcconfig"; sourceTree = "<group>"; };
 		D8A7DF9E07E129770E987270 /* Pods_YLPhotoBrowser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YLPhotoBrowser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E745048318E5F1C65758906B /* Pods-YLPhotoBrowser.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YLPhotoBrowser.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YLPhotoBrowser/Pods-YLPhotoBrowser.debug.xcconfig"; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 				79829DA01F26DECB009D3F61 /* YLPushAnimator.swift */,
 				79829DA21F26DEFE009D3F61 /* YLPopAnimator.swift */,
 				79829DA41F26E076009D3F61 /* YLDrivenInteractive.swift */,
+				81B0DF011F27699300049E1C /* YLPhoto.swift */,
 			);
 			path = YLPhotoBrowser;
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 				79829D881F26D5A7009D3F61 /* AppDelegate.swift in Sources */,
 				79829DA31F26DEFE009D3F61 /* YLPopAnimator.swift in Sources */,
 				79829DA51F26E076009D3F61 /* YLDrivenInteractive.swift in Sources */,
+				81B0DF021F27699300049E1C /* YLPhoto.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
