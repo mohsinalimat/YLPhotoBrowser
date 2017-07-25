@@ -27,6 +27,10 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
     
     private var isFirst = true
     
+    deinit {
+        gestureRecognizer.removeTarget(self, action: #selector(YLDrivenInteractive.gestureRecognizeDidUpdate(_:)))
+    }
+    
     func percentForGesture(_ gesture: UIPanGestureRecognizer) -> CGFloat {
         
         let translation = gesture.translation(in: gesture.view)
@@ -84,16 +88,21 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
             // ToVC
             let toViewController = transitionContext?.viewController(forKey: UITransitionContextViewControllerKey.to)
             toView = toViewController?.view
+            toView?.isHidden = false
             containerView.addSubview(toView!)
             
             // 有渐变的黑色背景
             blackBgView = UIView.init(frame: containerView.bounds)
             blackBgView?.backgroundColor = UIColor.black
+            blackBgView?.isHidden = false
             containerView.addSubview(blackBgView!)
+            
             
             // fromVC
             let fromViewController = transitionContext?.viewController(forKey: UITransitionContextViewControllerKey.from)
             fromView = fromViewController?.view
+            fromView?.backgroundColor = UIColor.clear
+            fromView?.isHidden = false
             containerView.addSubview(fromView!)
             
         }
@@ -107,9 +116,7 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
         
         let transitionContext = self.transitionContext
         
-        isFirst = true
-        
-        toView?.removeFromSuperview()
+        fromView?.backgroundColor = PhotoBrowserBG
         blackBgView?.removeFromSuperview()
         
         transitionContext?.completeTransition(!(transitionContext?.transitionWasCancelled)!)
@@ -136,10 +143,12 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
             }) { [weak self] (finished: Bool) in
                 
                 self?.blackBgView?.removeFromSuperview()
-                self?.fromView?.removeFromSuperview()
                 transitionImgView.removeFromSuperview()
                 
                 transitionContext?.completeTransition(!(transitionContext?.transitionWasCancelled)!)
+                
+                self?.fromView?.isHidden = false
+                self?.toView?.isHidden = false
             }
         }
     }

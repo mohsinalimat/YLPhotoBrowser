@@ -9,12 +9,14 @@
 import Foundation
 import UIKit
 
+let PhotoBrowserBG = UIColor.black
+
 let YLScreenW = UIScreen.main.bounds.width
 let YLScreenH = UIScreen.main.bounds.height
 
 class YLPhotoBrowser: UIViewController {
     
-    private var animatedTransition:YLAnimatedTransition = YLAnimatedTransition()
+    private var animatedTransition:YLAnimatedTransition?
     
     private var transitionImgViewCenter = CGPoint.zero
     
@@ -32,7 +34,7 @@ class YLPhotoBrowser: UIViewController {
     
     override func viewDidLoad() {
         
-        view.backgroundColor = UIColor.black
+        view.backgroundColor = PhotoBrowserBG
         
         imageView = UIImageView.init(frame: CGRect.init(x: 0, y: 84, width: YLScreenW, height: YLScreenW))
         
@@ -59,8 +61,10 @@ class YLPhotoBrowser: UIViewController {
         case .possible:
             break
         case .began:
+            animatedTransition = nil
+            animatedTransition = YLAnimatedTransition()
             navigationController?.delegate = animatedTransition
-            animatedTransition.gestureRecognizer = pan
+            animatedTransition?.gestureRecognizer = pan
             
             self.navigationController?.popViewController(animated: true)
             
@@ -68,7 +72,7 @@ class YLPhotoBrowser: UIViewController {
         case .changed:
             imageView.center = CGPoint.init(x: transitionImgViewCenter.x + translation.x * scale, y: transitionImgViewCenter.y + translation.y)
             imageView.transform = CGAffineTransform.init(scaleX: scale, y: scale)
-            animatedTransition.beforeImageViewFrame = CGRect.init(x: 10, y: 100, width: YLScreenW / 2 - 20, height: YLScreenW / 2 - 20)
+            animatedTransition?.beforeImageViewFrame = CGRect.init(x: 10, y: 100, width: YLScreenW / 2 - 20, height: YLScreenW / 2 - 20)
             
             
             break
@@ -89,8 +93,8 @@ class YLPhotoBrowser: UIViewController {
                 self.imageView.isHidden = true
             }
             
-            animatedTransition.currentImageView = imageView
-            animatedTransition.currentImageViewFrame = imageView.frame
+            animatedTransition?.currentImageView = imageView
+            animatedTransition?.currentImageViewFrame = imageView.frame
             navigationController?.delegate = animatedTransition
             
             break
