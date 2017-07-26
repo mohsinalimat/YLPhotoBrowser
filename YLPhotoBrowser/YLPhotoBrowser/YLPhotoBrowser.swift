@@ -119,10 +119,19 @@ class YLPhotoBrowser: UIViewController {
     // 双击手势
     func doubleTap() {
     
+        if currentImageView == nil {
+            return
+        }else if currentImageView?.image == nil {
+            return
+        }
+        
         if currentImageView?.superview is UIScrollView {
             let scrollView = currentImageView?.superview as! UIScrollView
             if scrollView.zoomScale == 1 {
-                scrollView.setZoomScale(2, animated: true)
+                
+                let scale = YLScreenH / (currentImageView?.frame.size.height ?? YLScreenH)
+            
+                scrollView.setZoomScale(scale > 4 ? 4: scale, animated: true)
             }else {
                 scrollView.setZoomScale(1, animated: true)
             }
@@ -135,9 +144,10 @@ class YLPhotoBrowser: UIViewController {
         
         if currentImageView == nil {
             return
-        }
-        
-        if currentImageView?.superview is UIScrollView {
+        }else if currentImageView?.image == nil {
+            return
+        }else if currentImageView?.superview is UIScrollView {
+            
             let scrollView = currentImageView?.superview as! UIScrollView
             if scrollView.zoomScale != 1 {
                 return
