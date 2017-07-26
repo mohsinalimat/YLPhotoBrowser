@@ -273,7 +273,6 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
         cell.addSubview(scrollView)
         
         let imageView = UIImageView()
-        imageView.contentMode = UIViewContentMode.center
         
         if photo?.imageUrl != "" {
             
@@ -319,6 +318,7 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
         
     }
 
+    // 已经停止减速
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
         if scrollView == collectionView {
@@ -335,6 +335,7 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
         }
     }
     
+    // 设置UIScrollView中要缩放的视图
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         if scrollView != collectionView {
             return scrollView.viewWithTag(100)
@@ -342,4 +343,22 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
             return nil
         }
     }
+    
+    // 让UIImageView在UIScrollView缩放后居中显示
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        if scrollView != collectionView {
+            
+            let size = scrollView.bounds.size
+            
+            let offsetX = (size.width > scrollView.contentSize.width) ?
+            (size.width - scrollView.contentSize.width) * 0.5 : 0.0
+            
+            let offsetY = (size.height > scrollView.contentSize.height) ?
+            (size.height - scrollView.contentSize.height) * 0.5 : 0.0
+            
+            scrollView.viewWithTag(100)?.center = CGPoint.init(x: scrollView.contentSize.width * 0.5 + offsetX, y: scrollView.contentSize.height * 0.5 + offsetY)
+            
+        }
+    }
+    
 }
