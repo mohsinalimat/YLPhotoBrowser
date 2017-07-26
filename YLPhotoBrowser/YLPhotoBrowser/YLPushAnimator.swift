@@ -34,6 +34,23 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         containerView.addSubview(toView!)
         toView?.isHidden = true
         
+        if transitionBeforeImgFrame == CGRect.zero {
+            toView?.isHidden = false
+            toView?.alpha = 0
+
+            UIView.animate(withDuration: 0.3, animations: {
+                
+                toView?.alpha = 1
+                
+            }, completion: { (finished:Bool) in
+                
+                // 设置transitionContext通知系统动画执行完毕
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            })
+            
+            return
+        }
+        
         // 有渐变的黑色背景
         let bgView = UIView.init(frame: containerView.bounds)
         bgView.backgroundColor = PhotoBrowserBG
@@ -45,24 +62,12 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         transitionImgView.frame = self.transitionBeforeImgFrame
         containerView.addSubview(transitionImgView)
         
-        
-        if transitionBeforeImgFrame == CGRect.zero {
-            
-            toView?.isHidden = false
-            bgView.removeFromSuperview()
-            transitionImgView.removeFromSuperview()
-            
-            //  设置transitionContext通知系统动画执行完毕
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-            
-            return
-        }
-        
+        // 如果没有过度图片
         if transitionImage == nil {
             let rect = CGRect.init(x: 0, y: 0, width: 1, height: 1)
             UIGraphicsBeginImageContext(rect.size)
             let context = UIGraphicsGetCurrentContext()
-            context!.setFillColor(UIColor.init(red: 244/255.0, green: 244/255.0, blue: 244/255.0, alpha: 0.2).cgColor)
+            context!.setFillColor(UIColor.init(red: 244/255.0, green: 244/255.0, blue: 244/255.0, alpha: 0.1).cgColor)
             context!.fill(rect)
             let img = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()

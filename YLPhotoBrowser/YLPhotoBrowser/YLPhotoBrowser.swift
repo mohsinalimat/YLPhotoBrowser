@@ -280,6 +280,7 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
         cell.addSubview(scrollView)
         
         let imageView = UIImageView()
+        imageView.backgroundColor = UIColor.init(red: 244/255.0, green: 244/255.0, blue: 244/255.0, alpha: 0.1)
         
         if photo?.imageUrl != "" {
             
@@ -293,9 +294,9 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
             webImageOptions.formUnion(SDWebImageOptions.progressiveDownload)
             imageView.sd_setImage(with: URL(string: (photo?.imageUrl)!), placeholderImage: nil, options: webImageOptions, completed: { [weak self] (image:UIImage?, error:Error?, cacheType:SDImageCacheType, url:URL?) in
                 guard let img = image else {
-                    let img = UIImage.init(named: "load_error")
-                    imageView.frame = (self?.getImageViewFrame((img?.size)!))!
-                    imageView.image = img
+                    let image = UIImage.init(named: "load_error")
+                    imageView.frame = self?.getImageViewFrame((image?.size)!) ?? CGRect.zero
+                    imageView.image = image
                     
                     return
                 }

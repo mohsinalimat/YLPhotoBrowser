@@ -40,22 +40,29 @@ class YLPopAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         bgView.alpha = 1
         containerView.addSubview(bgView)
         
+        if transitionBeforeImgFrame == CGRect.zero {
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                
+                bgView.alpha = 0
+                
+            }, completion: { (finished:Bool) in
+                
+                bgView.removeFromSuperview()
+                
+                // 设置transitionContext通知系统动画执行完毕
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            })
+            
+            return
+        }
+        
         // 过渡的图片
         let transitionImgView = UIImageView.init(image: self.transitionImage)
         transitionImgView.frame = self.transitionAfterImgFrame
         containerView.addSubview(transitionImgView)
         
-        if transitionBeforeImgFrame == CGRect.zero {
-            
-            bgView.removeFromSuperview()
-            transitionImgView.removeFromSuperview()
-            
-            //  设置transitionContext通知系统动画执行完毕
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-            
-            return
-        }
-        
+        // // 如果没有过度图片
         if transitionImage == nil {
             let rect = CGRect.init(x: 0, y: 0, width: 1, height: 1)
             UIGraphicsBeginImageContext(rect.size)
