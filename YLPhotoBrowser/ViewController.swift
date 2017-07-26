@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         imageView = UIImageView.init(frame: CGRect.init(x: 10, y: 100, width: YLScreenW / 2 - 20, height: YLScreenW / 2 - 20))
         
         imageView.image = UIImage(named: "1")
-        
+        imageView.tag = 0
         view.addSubview(imageView)
         
         imageView.isUserInteractionEnabled = true
@@ -30,7 +30,7 @@ class ViewController: UIViewController {
         imageView1 = UIImageView.init(frame: CGRect.init(x: YLScreenW / 2 + 10 , y: 100, width: YLScreenW / 2 - 20, height: YLScreenW / 2 - 20))
         
         imageView1.image = UIImage(named: "2")
-        
+        imageView1.tag = 1
         view.addSubview(imageView1)
         imageView1.isUserInteractionEnabled = true
         imageView1.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(ViewController.tapImageView(_:))))
@@ -43,7 +43,7 @@ class ViewController: UIViewController {
         photos.append(YLPhoto.addImage(imageView.image!, frame: imageView.frame))
         photos.append(YLPhoto.addImage(imageView1.image!, frame: imageView1.frame))
         
-        let photoBrowser = YLPhotoBrowser.init(photos, index: 1)
+        let photoBrowser = YLPhotoBrowser.init(photos, index: (tap.view?.tag)!)
         
         present(photoBrowser, animated: true, completion: nil)
     }

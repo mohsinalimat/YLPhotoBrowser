@@ -17,15 +17,15 @@ let YLScreenH = UIScreen.main.bounds.height
 class YLPhotoBrowser: UIViewController {
     
     fileprivate var photos: [YLPhoto]? // 图片
-    fileprivate var index: Int = 0
+    fileprivate var currentIndex: Int = 0
+    fileprivate var currentImageView:UIImageView?
+    
     fileprivate var appearAnimatedTransition:YLAnimatedTransition? // 进来的动画
     fileprivate var disappearAnimatedTransition:YLAnimatedTransition? // 出去的动画
     
     fileprivate var collectionView:UICollectionView!
     
     fileprivate var imageViewCenter = CGPoint.init(x: YLScreenW/2, y: YLScreenH/2)
-    
-    fileprivate var currentImageView:UIImageView?
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -43,14 +43,12 @@ class YLPhotoBrowser: UIViewController {
         self.init()
         
         self.photos = photos
-        self.index = index
+        self.currentIndex = index
         
         let photo = photos[index]
         
-         let height = YLScreenW * ((photo.image?.size.height)! / (photo.image?.size.width)!)
-        
         appearAnimatedTransition = nil
-        appearAnimatedTransition = YLAnimatedTransition.init(photo.image!, beforeImgFrame: photo.frame!, afterImgFrame: CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height))
+        appearAnimatedTransition = YLAnimatedTransition.init(photo.image!, beforeImgFrame: photo.frame!, afterImgFrame: getImageViewFrame(photo.image!))
     
         self.transitioningDelegate = appearAnimatedTransition
 
@@ -66,6 +64,8 @@ class YLPhotoBrowser: UIViewController {
         view.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.tap)))
         
         layoutUI()
+        
+        collectionView.contentOffset.x = YLScreenW * CGFloat(currentIndex)
     }
     
     private func layoutUI() {
@@ -89,11 +89,18 @@ class YLPhotoBrowser: UIViewController {
         view.addSubview(collectionView)
     }
     
+    // 点击手势
     func tap() {
-        self.transitioningDelegate = appearAnimatedTransition
-        dismiss(animated: true, completion: nil)
+        if let photo = photos?[currentIndex],
+            let imageView = currentImageView {
+            appearAnimatedTransition = nil
+            appearAnimatedTransition = YLAnimatedTransition.init(photo.image!, beforeImgFrame: photo.frame!, afterImgFrame: imageView.frame)
+            self.transitioningDelegate = appearAnimatedTransition
+            dismiss(animated: true, completion: nil)
+        }
     }
     
+    // 慢移手势
     func pan(_ pan: UIPanGestureRecognizer) {
         
         if currentImageView == nil {
@@ -146,10 +153,19 @@ class YLPhotoBrowser: UIViewController {
             
             disappearAnimatedTransition?.currentImage = currentImageView?.image
             disappearAnimatedTransition?.currentImageViewFrame = currentImageView?.frame
-            disappearAnimatedTransition?.beforeImageViewFrame = CGRect.init(x: 10, y: 100, width: YLScreenW / 2 - 20, height: YLScreenW / 2 - 20)
+            disappearAnimatedTransition?.beforeImageViewFrame = photos?[currentIndex].frame
             
             break
         }
+    }
+    
+    // 获取imageView frame
+    func getImageViewFrame(_ image: UIImage) -> CGRect {
+        
+        let height = YLScreenW * (image.size.height / image.size.width)
+        let frame = CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height)
+        
+        return frame
     }
 }
 
@@ -178,17 +194,16 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
         
         let photo = photos?[indexPath.row]
         
-        let imageView = UIImageView.init(frame: CGRect.init(x: 0, y: 0, width: YLScreenW, height: YLScreenH))
+        let imageView = UIImageView.init(image: photo?.image)
+        imageView.frame = getImageViewFrame((photo?.image)!)
 
         imageView.tag = 100
         
-        imageView.image = photo?.image
-
         imageView.contentMode = UIViewContentMode.scaleAspectFit
 
         cell.addSubview(imageView)
 
-        if indexPath.row == index {
+        if indexPath.row == currentIndex {
             currentImageView = imageView
         }
         
@@ -198,9 +213,9 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
-        index = Int(scrollView.contentOffset.x / YLScreenW)
+        currentIndex = Int(scrollView.contentOffset.x / YLScreenW)
         
-        let cell = collectionView.cellForItem(at: IndexPath.init(row: index, section: 0))
+        let cell = collectionView.cellForItem(at: IndexPath.init(row: currentIndex, section: 0))
         
         if let imgView = cell?.viewWithTag(100) {
             currentImageView = imgView as? UIImageView
