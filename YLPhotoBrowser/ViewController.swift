@@ -41,7 +41,7 @@ class ViewController: UIViewController {
     
         var photos = [YLPhoto]()
 
-        photos.append(YLPhoto.addImage(imageView.image, imageUrl: nil, frame: imageView.frame))
+        photos.append(YLPhoto.addImage(nil, imageUrl: "http://172.20.34.33/1.png", frame: imageView.frame))
         photos.append(YLPhoto.addImage(imageView1.image, imageUrl: nil, frame: imageView1.frame))
         
         let photoBrowser = YLPhotoBrowser.init(photos, index: (tap.view?.tag)!)

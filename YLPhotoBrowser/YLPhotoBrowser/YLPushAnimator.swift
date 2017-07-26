@@ -46,8 +46,7 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         containerView.addSubview(transitionImgView)
         
         
-        if transitionImage == nil ||
-            transitionBeforeImgFrame == CGRect.zero {
+        if transitionBeforeImgFrame == CGRect.zero {
             
             toView?.isHidden = false
             bgView.removeFromSuperview()
@@ -57,6 +56,18 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
             
             return
+        }
+        
+        if transitionImage == nil {
+            let rect = CGRect.init(x: 0, y: 0, width: 1, height: 1)
+            UIGraphicsBeginImageContext(rect.size)
+            let context = UIGraphicsGetCurrentContext()
+            context!.setFillColor(UIColor.init(red: 244/255.0, green: 244/255.0, blue: 244/255.0, alpha: 0.2).cgColor)
+            context!.fill(rect)
+            let img = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            transitionImgView.image = img
         }
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1, options: UIViewAnimationOptions.curveLinear, animations: { [weak self] in

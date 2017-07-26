@@ -218,6 +218,13 @@ class YLPhotoBrowser: UIViewController {
     // 修改 transitioningDelegate
     func editTransitioningDelegate(_ photo: YLPhoto) {
     
+        if photo.image == nil {
+            let url = SDWebImageManager.shared().cacheKey(for: URL.init(string: photo.imageUrl))
+            if let image =  SDImageCache.shared().imageFromCache(forKey: url) {
+                photo.image = image
+            }
+        }
+        
         appearAnimatedTransition = nil
         var afterImgFrame = CGRect.zero
         if currentImageView != nil {
