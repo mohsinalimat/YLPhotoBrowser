@@ -93,10 +93,10 @@ class YLPhotoBrowser: UIViewController {
             
             pageControl = UIPageControl()
             pageControl?.center = CGPoint(x: YLScreenW / 2 , y: YLScreenH - 30)
-            pageControl?.currentPage = currentIndex
             pageControl?.pageIndicatorTintColor = UIColor.lightGray
             pageControl?.currentPageIndicatorTintColor = UIColor.white
             pageControl?.numberOfPages = (photos?.count)!
+            pageControl?.currentPage = currentIndex
             pageControl?.backgroundColor = UIColor.clear
             
             view.addSubview(pageControl!)
