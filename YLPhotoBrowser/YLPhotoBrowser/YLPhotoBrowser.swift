@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SDWebImage
 
 let PhotoBrowserBG = UIColor.black
 
@@ -19,6 +20,8 @@ class YLPhotoBrowser: UIViewController {
     fileprivate var photos: [YLPhoto]? // 图片
     fileprivate var currentIndex: Int = 0 // 当前row
     fileprivate var currentImageView:UIImageView? // 当前图片
+    // 默认用户选择的图片位置
+    fileprivate var defaultBeforeImgFrame = CGRect.zero
     
     fileprivate var appearAnimatedTransition:YLAnimatedTransition? // 进来的动画
     fileprivate var disappearAnimatedTransition:YLAnimatedTransition? // 出去的动画
@@ -48,11 +51,9 @@ class YLPhotoBrowser: UIViewController {
         
         let photo = photos[index]
         
-        appearAnimatedTransition = nil
-        appearAnimatedTransition = YLAnimatedTransition.init(photo.image!, beforeImgFrame: photo.frame!, afterImgFrame: getImageViewFrame(photo.image!))
-    
-        self.transitioningDelegate = appearAnimatedTransition
-
+        defaultBeforeImgFrame = photo.frame ?? CGRect.zero
+        
+        editTransitioningDelegate(photo)
     }
     
     override func viewDidLoad() {
@@ -106,11 +107,8 @@ class YLPhotoBrowser: UIViewController {
     
     // 点击手势
     func tap() {
-        if let photo = photos?[currentIndex],
-            let imageView = currentImageView {
-            appearAnimatedTransition = nil
-            appearAnimatedTransition = YLAnimatedTransition.init(photo.image!, beforeImgFrame: photo.frame!, afterImgFrame: imageView.frame)
-            self.transitioningDelegate = appearAnimatedTransition
+        if let photo = photos?[currentIndex]{
+            editTransitioningDelegate(photo)
             dismiss(animated: true, completion: nil)
         }
     }
@@ -164,23 +162,32 @@ class YLPhotoBrowser: UIViewController {
                 })
             }else {
                 self.currentImageView?.isHidden = true
+                disappearAnimatedTransition?.currentImage = currentImageView?.image
+                disappearAnimatedTransition?.currentImageViewFrame = currentImageView?.frame ?? CGRect.zero
+                disappearAnimatedTransition?.beforeImageViewFrame = photos?[currentIndex].frame ?? defaultBeforeImgFrame
             }
-            
-            disappearAnimatedTransition?.currentImage = currentImageView?.image
-            disappearAnimatedTransition?.currentImageViewFrame = currentImageView?.frame
-            disappearAnimatedTransition?.beforeImageViewFrame = photos?[currentIndex].frame
             
             break
         }
     }
     
     // 获取imageView frame
-    func getImageViewFrame(_ image: UIImage) -> CGRect {
+    func getImageViewFrame(_ size: CGSize) -> CGRect {
         
-        let height = YLScreenW * (image.size.height / image.size.width)
+        let height = YLScreenW * (size.height / size.width)
         let frame = CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height)
         
         return frame
+    }
+    
+    // 修改 transitioningDelegate
+    func editTransitioningDelegate(_ photo: YLPhoto) {
+    
+        appearAnimatedTransition = nil
+        appearAnimatedTransition = YLAnimatedTransition.init(photo.image, beforeImgFrame: photo.frame ?? defaultBeforeImgFrame, afterImgFrame: photo.image != nil ? getImageViewFrame((photo.image?.size)!):getImageViewFrame(CGSize.init(width: YLScreenW, height: YLScreenW)))
+        
+        self.transitioningDelegate = appearAnimatedTransition
+        
     }
 }
 
@@ -209,9 +216,32 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
         
         let photo = photos?[indexPath.row]
         
-        let imageView = UIImageView.init(image: photo?.image)
-        imageView.frame = getImageViewFrame((photo?.image)!)
-
+        let imageView = UIImageView()
+        
+        if photo?.imageUrl != "" {
+            
+            imageView.frame.size = CGSize.init(width: YLScreenW, height: YLScreenW)
+            imageView.center = imageViewCenter
+            imageView.sd_setShowActivityIndicatorView(true)
+            imageView.sd_setIndicatorStyle(.white)
+            var webImageOptions = SDWebImageOptions.retryFailed
+            webImageOptions.formUnion(SDWebImageOptions.progressiveDownload)
+            imageView.sd_setImage(with: URL(string: (photo?.imageUrl)!), placeholderImage: nil, options: webImageOptions, completed: { [weak self] (image:UIImage?, error:Error?, cacheType:SDImageCacheType, url:URL?) in
+                guard let img = image else {
+                    
+                    return
+                }
+                imageView.frame = (self?.getImageViewFrame(img.size))!
+                imageView.image = img
+                photo?.image = image
+            })
+        }else if photo?.image != nil {
+            
+            imageView.image = photo?.image
+            imageView.frame = getImageViewFrame((photo?.image?.size)!)
+            
+        }
+        
         imageView.tag = 100
         
         imageView.contentMode = UIViewContentMode.scaleAspectFit

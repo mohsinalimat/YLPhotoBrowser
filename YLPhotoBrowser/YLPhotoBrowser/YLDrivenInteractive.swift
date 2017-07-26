@@ -12,7 +12,7 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
     
     var beforeImageViewFrame: CGRect = CGRect.zero
     var currentImageViewFrame: CGRect = CGRect.zero
-    var currentImage: UIImage!
+    var currentImage: UIImage?
     
     var gestureRecognizer: UIPanGestureRecognizer! {
         didSet {

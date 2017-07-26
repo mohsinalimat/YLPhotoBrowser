@@ -39,7 +39,7 @@ class YLAnimatedTransition: NSObject,UIViewControllerTransitioningDelegate {
         print("释放:\(self)")
     }
     
-    convenience init(_ image: UIImage,beforeImgFrame: CGRect ,afterImgFrame: CGRect) {
+    convenience init(_ image: UIImage?,beforeImgFrame: CGRect? ,afterImgFrame: CGRect?) {
         self.init()
         
         setTransitionImage(image)
@@ -48,22 +48,22 @@ class YLAnimatedTransition: NSObject,UIViewControllerTransitioningDelegate {
     }
     
     // 转场过渡的图片
-    private func setTransitionImage(_ transitionImage: UIImage) {
+    private func setTransitionImage(_ transitionImage: UIImage?) {
         customPush.transitionImage = transitionImage
         customPop.transitionImage = transitionImage
     }
     
     // 转场前的图片frame
-    private func setTransitionBeforeImgFrame(_ frame: CGRect) {
-        customPush.transitionBeforeImgFrame = frame
-        customPop.transitionBeforeImgFrame = frame
-        percentIntractive.beforeImageViewFrame = frame
+    private func setTransitionBeforeImgFrame(_ frame: CGRect?) {
+        customPush.transitionBeforeImgFrame = frame ?? CGRect.zero
+        customPop.transitionBeforeImgFrame = frame ?? CGRect.zero
+        percentIntractive.beforeImageViewFrame = frame ?? CGRect.zero
     }
     
     // 转场后的图片frame
-    private func setTransitionAfterImgFrame(_ frame: CGRect) {
-        customPush.transitionAfterImgFrame = frame
-        customPop.transitionAfterImgFrame = frame
+    private func setTransitionAfterImgFrame(_ frame: CGRect?) {
+        customPush.transitionAfterImgFrame = frame ?? CGRect.zero
+        customPop.transitionAfterImgFrame = frame ?? CGRect.zero
     }
     
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {

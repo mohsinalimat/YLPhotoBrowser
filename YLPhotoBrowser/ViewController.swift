@@ -40,8 +40,9 @@ class ViewController: UIViewController {
     func tapImageView(_ tap:UITapGestureRecognizer) {
     
         var photos = [YLPhoto]()
-        photos.append(YLPhoto.addImage(imageView.image!, frame: imageView.frame))
-        photos.append(YLPhoto.addImage(imageView1.image!, frame: imageView1.frame))
+
+        photos.append(YLPhoto.addImage(nil, imageUrl: "http://172.20.34.33/1.png", frame: imageView.frame))
+        photos.append(YLPhoto.addImage(nil, imageUrl: "http://172.20.34.33/2.png", frame: nil))
         
         let photoBrowser = YLPhotoBrowser.init(photos, index: (tap.view?.tag)!)
         

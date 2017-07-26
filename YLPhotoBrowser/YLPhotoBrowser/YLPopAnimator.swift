@@ -10,7 +10,7 @@ import UIKit
 
 class YLPopAnimator: NSObject,UIViewControllerAnimatedTransitioning {
     
-    var transitionImage: UIImage!
+    var transitionImage: UIImage?
     var transitionBeforeImgFrame: CGRect = CGRect.zero
     var transitionAfterImgFrame: CGRect = CGRect.zero
     
@@ -44,6 +44,18 @@ class YLPopAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         let transitionImgView = UIImageView.init(image: self.transitionImage)
         transitionImgView.frame = self.transitionAfterImgFrame
         containerView.addSubview(transitionImgView)
+        
+        if transitionImage == nil ||
+            transitionBeforeImgFrame == CGRect.zero {
+            
+            bgView.removeFromSuperview()
+            transitionImgView.removeFromSuperview()
+            
+            //  设置transitionContext通知系统动画执行完毕
+            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+            
+            return
+        }
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.3, options: UIViewAnimationOptions.curveLinear, animations: { [weak self] in
             
