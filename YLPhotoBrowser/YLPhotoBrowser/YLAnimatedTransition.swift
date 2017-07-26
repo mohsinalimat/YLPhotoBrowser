@@ -8,7 +8,7 @@
 
 import UIKit
 
-class YLAnimatedTransition: NSObject,UINavigationControllerDelegate {
+class YLAnimatedTransition: NSObject,UIViewControllerTransitioningDelegate {
     
     var beforeImageViewFrame: CGRect! {
         didSet {
@@ -66,23 +66,21 @@ class YLAnimatedTransition: NSObject,UINavigationControllerDelegate {
         customPop.transitionAfterImgFrame = frame
     }
     
-    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        
-        if operation == UINavigationControllerOperation.push {
-            return customPush
-        }else if operation == UINavigationControllerOperation.pop {
-            return customPop
-        }else {
-            return nil
-        }
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return customPush
     }
     
-    func navigationController(_ navigationController: UINavigationController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return customPop
+    }
+    
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         if gestureRecognizer != nil {
             return percentIntractive
         }else {
             return nil
         }
     }
+    
+    
 }

@@ -15,11 +15,8 @@ let YLScreenW = UIScreen.main.bounds.width
 let YLScreenH = UIScreen.main.bounds.height
 
 class YLPhotoBrowser: UIViewController {
-    // 图片
-    private var photos: [YLPhoto]?
-    // 代理
-    private var delegate: UIViewController?
     
+    private var photos: [YLPhoto]? // 图片
     private var appearAnimatedTransition:YLAnimatedTransition? // 进来的动画
     private var disappearAnimatedTransition:YLAnimatedTransition? // 出去的动画
     
@@ -27,28 +24,19 @@ class YLPhotoBrowser: UIViewController {
     
     var imageView: UIImageView!
     
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
-    }
-    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        delegate?.navigationController?.setNavigationBarHidden(false, animated: animated)
-        navigationController?.delegate = nil
+        
         disappearAnimatedTransition = nil
     }
     
     deinit {
-        
-        delegate?.navigationController?.delegate = nil
-        delegate = nil
+        transitioningDelegate = nil
         appearAnimatedTransition = nil
         print("释放:\(self)")
     }
     
-    convenience init(_ target:Any,photos: [YLPhoto],index: Int) {
+    convenience init(_ photos: [YLPhoto],index: Int) {
         self.init()
         
         let photo = photos[index]
@@ -57,10 +45,9 @@ class YLPhotoBrowser: UIViewController {
         
         appearAnimatedTransition = nil
         appearAnimatedTransition = YLAnimatedTransition.init(photo.image!, beforeImgFrame: photo.frame!, afterImgFrame: CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height))
-        
-        delegate = (target as! UIViewController)
-        
-        delegate?.navigationController?.delegate = appearAnimatedTransition
+    
+        self.transitioningDelegate = appearAnimatedTransition
+
     }
     
     override func viewDidLoad() {
@@ -78,6 +65,12 @@ class YLPhotoBrowser: UIViewController {
         view.isUserInteractionEnabled = true
         
         view.addGestureRecognizer(UIPanGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.imageViewPan(_:))))
+        view.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.imageViewTap)))
+    }
+    
+    func imageViewTap() {
+        self.transitioningDelegate = appearAnimatedTransition
+        dismiss(animated: true, completion: nil)
     }
     
     func imageViewPan(_ pan: UIPanGestureRecognizer) {
@@ -97,8 +90,9 @@ class YLPhotoBrowser: UIViewController {
             disappearAnimatedTransition = nil
             disappearAnimatedTransition = YLAnimatedTransition()
             disappearAnimatedTransition?.gestureRecognizer = pan
-            navigationController?.delegate = disappearAnimatedTransition
-            (self.navigationController)!.popViewController(animated: true)
+            self.transitioningDelegate = disappearAnimatedTransition
+            
+            dismiss(animated: true, completion: nil)
             
             break
         case .changed:
@@ -131,7 +125,5 @@ class YLPhotoBrowser: UIViewController {
             
             break
         }
-        
     }
-    
 }

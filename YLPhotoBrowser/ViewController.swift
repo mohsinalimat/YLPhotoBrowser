@@ -39,9 +39,9 @@ class ViewController: UIViewController {
         var photos = [YLPhoto]()
         photos.append(YLPhoto.addImage(imgView.image!, frame: imgView.frame))
         
-        let photoBrowser = YLPhotoBrowser.init(self, photos: photos, index: 0)
+        let photoBrowser = YLPhotoBrowser.init(photos, index: 0)
         
-        navigationController?.pushViewController(photoBrowser, animated: true)
+        present(photoBrowser, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
