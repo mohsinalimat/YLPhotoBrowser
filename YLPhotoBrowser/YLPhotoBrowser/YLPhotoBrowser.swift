@@ -17,13 +17,14 @@ let YLScreenH = UIScreen.main.bounds.height
 class YLPhotoBrowser: UIViewController {
     
     fileprivate var photos: [YLPhoto]? // 图片
-    fileprivate var currentIndex: Int = 0
-    fileprivate var currentImageView:UIImageView?
+    fileprivate var currentIndex: Int = 0 // 当前row
+    fileprivate var currentImageView:UIImageView? // 当前图片
     
     fileprivate var appearAnimatedTransition:YLAnimatedTransition? // 进来的动画
     fileprivate var disappearAnimatedTransition:YLAnimatedTransition? // 出去的动画
     
     fileprivate var collectionView:UICollectionView!
+    fileprivate var pageControl:UIPageControl?
     
     fileprivate var imageViewCenter = CGPoint.init(x: YLScreenW/2, y: YLScreenH/2)
     
@@ -87,6 +88,20 @@ class YLPhotoBrowser: UIViewController {
         collectionView.dataSource = self
         
         view.addSubview(collectionView)
+        
+        if (photos?.count)! > 1 {
+            
+            pageControl = UIPageControl()
+            pageControl?.center = CGPoint(x: YLScreenW / 2 , y: YLScreenH - 30)
+            pageControl?.currentPage = currentIndex
+            pageControl?.pageIndicatorTintColor = UIColor.lightGray
+            pageControl?.currentPageIndicatorTintColor = UIColor.white
+            pageControl?.numberOfPages = (photos?.count)!
+            pageControl?.backgroundColor = UIColor.clear
+            
+            view.addSubview(pageControl!)
+            
+        }
     }
     
     // 点击手势
@@ -214,6 +229,8 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
         currentIndex = Int(scrollView.contentOffset.x / YLScreenW)
+        
+        pageControl?.currentPage = currentIndex
         
         let cell = collectionView.cellForItem(at: IndexPath.init(row: currentIndex, section: 0))
         

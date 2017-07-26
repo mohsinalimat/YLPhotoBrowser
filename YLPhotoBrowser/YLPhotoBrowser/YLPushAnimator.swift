@@ -32,11 +32,11 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         let toViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)
         let toView = toViewController?.view
         containerView.addSubview(toView!)
-        toView?.isHidden = false
+        toView?.isHidden = true
         
         // 有渐变的黑色背景
         let bgView = UIView.init(frame: containerView.bounds)
-        bgView.backgroundColor = UIColor.black
+        bgView.backgroundColor = PhotoBrowserBG
         bgView.alpha = 0
         containerView.addSubview(bgView)
         
@@ -51,6 +51,8 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
             bgView.alpha = 1
             
         }) { (finished:Bool) in
+            
+            toView?.isHidden = false
             
             bgView.removeFromSuperview()
             transitionImgView.removeFromSuperview()

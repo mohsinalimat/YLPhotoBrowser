@@ -90,7 +90,7 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
             
             // 有渐变的黑色背景
             blackBgView = UIView.init(frame: containerView.bounds)
-            blackBgView?.backgroundColor = UIColor.black
+            blackBgView?.backgroundColor = PhotoBrowserBG
             blackBgView?.isHidden = false
             containerView.addSubview(blackBgView!)
             

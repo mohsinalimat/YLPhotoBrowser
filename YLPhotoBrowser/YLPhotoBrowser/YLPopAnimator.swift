@@ -36,7 +36,7 @@ class YLPopAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         
         // 有渐变的黑色背景
         let bgView = UIView.init(frame: containerView.bounds)
-        bgView.backgroundColor = UIColor.black
+        bgView.backgroundColor = PhotoBrowserBG
         bgView.alpha = 1
         containerView.addSubview(bgView)
         
