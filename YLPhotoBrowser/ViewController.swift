@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var animatedTransition:YLAnimatedTransition = YLAnimatedTransition()
+    fileprivate var collectionView:UICollectionView!
     
     var imageView:UIImageView!
     var imageView1:UIImageView!
