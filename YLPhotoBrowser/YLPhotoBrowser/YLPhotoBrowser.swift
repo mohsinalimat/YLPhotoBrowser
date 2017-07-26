@@ -59,7 +59,13 @@ class YLPhotoBrowser: UIViewController {
         view.isUserInteractionEnabled = true
 
         view.addGestureRecognizer(UIPanGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.pan(_:))))
-        view.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.tap)))
+        let singleTap = UITapGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.singleTap))
+        view.addGestureRecognizer(singleTap)
+        let doubleTap = UITapGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.doubleTap))
+        doubleTap.numberOfTapsRequired = 2
+        view.addGestureRecognizer(doubleTap)
+        // 优先识别 双击
+        singleTap.require(toFail: doubleTap)
         
         layoutUI()
         
@@ -101,12 +107,27 @@ class YLPhotoBrowser: UIViewController {
         }
     }
     
-    // 点击手势
-    func tap() {
+    // 单击手势
+    func singleTap() {
+    
         if let photo = photos?[currentIndex]{
             editTransitioningDelegate(photo)
             dismiss(animated: true, completion: nil)
         }
+    }
+    
+    // 双击手势
+    func doubleTap() {
+    
+        if currentImageView?.superview is UIScrollView {
+            let scrollView = currentImageView?.superview as! UIScrollView
+            if scrollView.zoomScale == 1 {
+                scrollView.setZoomScale(2, animated: true)
+            }else {
+                scrollView.setZoomScale(1, animated: true)
+            }
+        }
+        
     }
     
     // 慢移手势
@@ -116,55 +137,66 @@ class YLPhotoBrowser: UIViewController {
             return
         }
         
-        let translation = pan.translation(in:  pan.view)
-        
-        var scale = 1 - translation.y / YLScreenH
-        
-        scale = scale > 1 ? 1:scale
-        scale = scale < 0 ? 0:scale
-        
-        switch pan.state {
-        case .possible:
-            break
-        case .began:
-            
-            disappearAnimatedTransition = nil
-            disappearAnimatedTransition = YLAnimatedTransition()
-            disappearAnimatedTransition?.gestureRecognizer = pan
-            self.transitioningDelegate = disappearAnimatedTransition
-            
-            dismiss(animated: true, completion: nil)
-            
-            break
-        case .changed:
-
-            currentImageView?.transform = CGAffineTransform.init(scaleX: scale, y: scale)
-            
-            currentImageView?.center = CGPoint.init(x: imageViewCenter.x + translation.x * scale, y: imageViewCenter.y + translation.y * scale)
-            
-            break
-        case .failed,.cancelled,.ended:
-            
-            if translation.y <= 80 {
-                UIView.animate(withDuration: 0.2, animations: {
-                    [weak self] in
-                    
-                    self?.currentImageView?.center = (self?.imageViewCenter)!
-                    self?.currentImageView?.transform = CGAffineTransform.init(scaleX: 1, y: 1)
-                    }, completion: { [weak self] (finished: Bool) in
-                    
-                        self?.currentImageView?.transform = CGAffineTransform.identity
-                        
-                })
-            }else {
-                self.currentImageView?.isHidden = true
-                disappearAnimatedTransition?.currentImage = photos?[currentIndex].image
-                disappearAnimatedTransition?.currentImageViewFrame = currentImageView?.frame ?? CGRect.zero
-                disappearAnimatedTransition?.beforeImageViewFrame = photos?[currentIndex].frame ?? CGRect.zero
+        if currentImageView?.superview is UIScrollView {
+            let scrollView = currentImageView?.superview as! UIScrollView
+            if scrollView.zoomScale != 1 {
+                return
             }
             
-            break
+            scrollView.delegate = nil
+            
+            let translation = pan.translation(in:  pan.view)
+            
+            var scale = 1 - translation.y / YLScreenH
+            
+            scale = scale > 1 ? 1:scale
+            scale = scale < 0 ? 0:scale
+            
+            switch pan.state {
+            case .possible:
+                break
+            case .began:
+                
+                disappearAnimatedTransition = nil
+                disappearAnimatedTransition = YLAnimatedTransition()
+                disappearAnimatedTransition?.gestureRecognizer = pan
+                self.transitioningDelegate = disappearAnimatedTransition
+                
+                dismiss(animated: true, completion: nil)
+                
+                break
+            case .changed:
+                
+                currentImageView?.transform = CGAffineTransform.init(scaleX: scale, y: scale)
+                
+                currentImageView?.center = CGPoint.init(x: imageViewCenter.x + translation.x * scale, y: imageViewCenter.y + translation.y * scale)
+                
+                break
+            case .failed,.cancelled,.ended:
+                
+                if translation.y <= 80 {
+                    UIView.animate(withDuration: 0.2, animations: {
+                        [weak self] in
+                        
+                        self?.currentImageView?.center = (self?.imageViewCenter)!
+                        self?.currentImageView?.transform = CGAffineTransform.init(scaleX: 1, y: 1)
+                        }, completion: { [weak self] (finished: Bool) in
+                            
+                            self?.currentImageView?.transform = CGAffineTransform.identity
+                            
+                    })
+                    scrollView.delegate = self
+                }else {
+                    self.currentImageView?.isHidden = true
+                    disappearAnimatedTransition?.currentImage = photos?[currentIndex].image
+                    disappearAnimatedTransition?.currentImageViewFrame = currentImageView?.frame ?? CGRect.zero
+                    disappearAnimatedTransition?.beforeImageViewFrame = photos?[currentIndex].frame ?? CGRect.zero
+                }
+                
+                break
+            }
         }
+        
     }
     
     // 获取imageView frame
@@ -187,7 +219,16 @@ class YLPhotoBrowser: UIViewController {
     func editTransitioningDelegate(_ photo: YLPhoto) {
     
         appearAnimatedTransition = nil
-        appearAnimatedTransition = YLAnimatedTransition.init(photo.image, beforeImgFrame: photo.frame, afterImgFrame: photo.image != nil ? getImageViewFrame((photo.image?.size)!):getImageViewFrame(CGSize.init(width: YLScreenW, height: YLScreenW)))
+        var afterImgFrame = CGRect.zero
+        if currentImageView != nil {
+            afterImgFrame = (currentImageView?.frame)!
+        }else if photo.image != nil {
+            afterImgFrame = getImageViewFrame((photo.image?.size)!)
+        }else {
+            afterImgFrame = getImageViewFrame(CGSize.init(width: YLScreenW, height: YLScreenW))
+        }
+        
+        appearAnimatedTransition = YLAnimatedTransition.init(photo.image, beforeImgFrame: photo.frame, afterImgFrame:afterImgFrame)
         
         self.transitioningDelegate = appearAnimatedTransition
         
@@ -219,7 +260,20 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
         
         let photo = photos?[indexPath.row]
         
+        let scrollView: UIScrollView = {
+            let sv = UIScrollView(frame: cell.bounds)
+            sv.showsHorizontalScrollIndicator = false
+            sv.showsVerticalScrollIndicator = false
+            sv.maximumZoomScale = 4.0
+            sv.minimumZoomScale = 1.0
+            sv.delegate = self
+            return sv
+        }()
+        
+        cell.addSubview(scrollView)
+        
         let imageView = UIImageView()
+        imageView.contentMode = UIViewContentMode.center
         
         if photo?.imageUrl != "" {
             
@@ -254,7 +308,8 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
         
         imageView.contentMode = UIViewContentMode.scaleAspectFit
 
-        cell.addSubview(imageView)
+        scrollView.contentSize = imageView.frame.size
+        scrollView.addSubview(imageView)
 
         if indexPath.row == currentIndex {
             currentImageView = imageView
@@ -266,15 +321,25 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
-        currentIndex = Int(scrollView.contentOffset.x / YLScreenW)
-        
-        pageControl?.currentPage = currentIndex
-        
-        let cell = collectionView.cellForItem(at: IndexPath.init(row: currentIndex, section: 0))
-        
-        if let imgView = cell?.viewWithTag(100) {
-            currentImageView = imgView as? UIImageView
+        if scrollView == collectionView {
+            currentIndex = Int(scrollView.contentOffset.x / YLScreenW)
+            print(scrollView.contentOffset.x / YLScreenW)
+            pageControl?.currentPage = currentIndex
+            
+            let cell = collectionView.cellForItem(at: IndexPath.init(row: currentIndex, section: 0))
+            
+            if let imgView = cell?.viewWithTag(100) {
+                currentImageView = imgView as? UIImageView
+            }
+
         }
     }
     
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        if scrollView != collectionView {
+            return scrollView.viewWithTag(100)
+        }else {
+            return nil
+        }
+    }
 }

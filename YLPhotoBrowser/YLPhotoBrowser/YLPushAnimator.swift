@@ -59,7 +59,7 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
             return
         }
         
-        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.3, options: UIViewAnimationOptions.curveLinear, animations: { [weak self] in
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1, options: UIViewAnimationOptions.curveLinear, animations: { [weak self] in
             
             transitionImgView.frame = (self?.transitionAfterImgFrame)!
             bgView.alpha = 1
