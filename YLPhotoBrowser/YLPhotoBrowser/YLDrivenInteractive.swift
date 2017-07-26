@@ -32,19 +32,16 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
         gestureRecognizer = nil
     }
     
-    func percentForGesture(_ gesture: UIPanGestureRecognizer) -> CGFloat {
-        
-        let offset = (gesture.view?.center.y)! - YLScreenH / 2
-        
-        var scale = 1 - fabs(offset / YLScreenH)
-        scale = scale < 0 ? 0:scale
-        
-        return scale
-    }
+    
     
     func gestureRecognizeDidUpdate(_ gestureRecognizer: UIPanGestureRecognizer) {
         
-        let scrale = percentForGesture(gestureRecognizer)
+        let translation = gestureRecognizer.translation(in:  gestureRecognizer.view)
+        
+        var scale = 1 - translation.y / YLScreenH
+        
+        scale = scale > 1 ? 1:scale
+        scale = scale < 0 ? 0:scale
         
         if isFirst {
             beginInterPercent()
@@ -56,17 +53,17 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
             // 进不来
             break
         case .changed:
-            update(percentForGesture(gestureRecognizer))
-            updateInterPercent(percentForGesture(gestureRecognizer))
+            update(scale)
+            updateInterPercent(scale)
             break
         case .ended:
             
-            if scrale > 0.9 {
+            if translation.y <= 80 {
                 cancel()
                 interPercentCancel()
             }else {
                 finish()
-                interPercentFinish(scrale)
+                interPercentFinish()
             }
             
             break
@@ -122,7 +119,7 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
         transitionContext?.completeTransition(!(transitionContext?.transitionWasCancelled)!)
     }
     
-    func interPercentFinish(_ scale: CGFloat) {
+    func interPercentFinish() {
         
         let transitionContext = self.transitionContext
         

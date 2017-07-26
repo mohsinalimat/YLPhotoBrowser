@@ -23,7 +23,7 @@ class YLPhotoBrowser: UIViewController {
     private var appearAnimatedTransition:YLAnimatedTransition? // 进来的动画
     private var disappearAnimatedTransition:YLAnimatedTransition? // 出去的动画
     
-    private var transitionImgViewCenter = CGPoint.zero
+    private var transitionImgViewCenter = CGPoint.init(x: YLScreenW/2, y: YLScreenH/2)
     
     var imageView: UIImageView!
     
@@ -37,13 +37,14 @@ class YLPhotoBrowser: UIViewController {
         super.viewDidDisappear(animated)
         delegate?.navigationController?.setNavigationBarHidden(false, animated: animated)
         navigationController?.delegate = nil
-        delegate?.navigationController?.delegate = nil
-        delegate = nil
-        appearAnimatedTransition = nil
         disappearAnimatedTransition = nil
     }
     
     deinit {
+        
+        delegate?.navigationController?.delegate = nil
+        delegate = nil
+        appearAnimatedTransition = nil
         print("释放:\(self)")
     }
     
@@ -74,21 +75,18 @@ class YLPhotoBrowser: UIViewController {
         
         view.addSubview(imageView)
 
-        transitionImgViewCenter = imageView.center
+        view.isUserInteractionEnabled = true
         
-        imageView.isUserInteractionEnabled = true
-        
-        imageView.addGestureRecognizer(UIPanGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.imageViewPan(_:))))
+        view.addGestureRecognizer(UIPanGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.imageViewPan(_:))))
     }
     
     func imageViewPan(_ pan: UIPanGestureRecognizer) {
         
-        let translation = pan.translation(in:  pan.view?.superview)
+        let translation = pan.translation(in:  pan.view)
         
-        let offsetY = (pan.view?.center.y)! - YLScreenH / 2
+        var scale = 1 - translation.y / YLScreenH
         
-        var scale = 1 - fabs(offsetY / YLScreenH)
-        
+        scale = scale > 1 ? 1:scale
         scale = scale < 0 ? 0:scale
         
         switch pan.state {
@@ -105,26 +103,14 @@ class YLPhotoBrowser: UIViewController {
             break
         case .changed:
 
-            let ts =  pan.translation(in:  pan.view)
-            let absX = fabs(ts.x)
-            let absY = fabs(ts.y)
+            imageView.transform = CGAffineTransform.init(scaleX: scale, y: scale)
             
-            if absY < 10 && absX > 10 {
-                return
-            }else
-                if ts.y > 0 {
-            
-                imageView.transform = CGAffineTransform.init(scaleX: scale, y: scale)
-                
-                imageView.center = CGPoint.init(x: imageView.center.x + translation.x, y: imageView.center.y + translation.y)
-                pan.setTranslation(CGPoint.zero, in: pan.view?.superview)
-                
-            }
+            imageView.center = CGPoint.init(x: transitionImgViewCenter.x + translation.x * scale, y: transitionImgViewCenter.y + translation.y * scale)
             
             break
         case .failed,.cancelled,.ended:
             
-            if scale > 0.9 {
+            if translation.y <= 80 {
                 UIView.animate(withDuration: 0.2, animations: {
                     [weak self] in
                     
