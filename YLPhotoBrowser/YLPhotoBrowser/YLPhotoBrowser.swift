@@ -16,13 +16,16 @@ let YLScreenH = UIScreen.main.bounds.height
 
 class YLPhotoBrowser: UIViewController {
     
-    private var photos: [YLPhoto]? // 图片
-    private var appearAnimatedTransition:YLAnimatedTransition? // 进来的动画
-    private var disappearAnimatedTransition:YLAnimatedTransition? // 出去的动画
+    fileprivate var photos: [YLPhoto]? // 图片
+    fileprivate var index: Int = 0
+    fileprivate var appearAnimatedTransition:YLAnimatedTransition? // 进来的动画
+    fileprivate var disappearAnimatedTransition:YLAnimatedTransition? // 出去的动画
     
-    private var transitionImgViewCenter = CGPoint.init(x: YLScreenW/2, y: YLScreenH/2)
+    fileprivate var collectionView:UICollectionView!
     
-    var imageView: UIImageView!
+    fileprivate var imageViewCenter = CGPoint.init(x: YLScreenW/2, y: YLScreenH/2)
+    
+    fileprivate var currentImageView:UIImageView?
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -39,6 +42,9 @@ class YLPhotoBrowser: UIViewController {
     convenience init(_ photos: [YLPhoto],index: Int) {
         self.init()
         
+        self.photos = photos
+        self.index = index
+        
         let photo = photos[index]
         
          let height = YLScreenW * ((photo.image?.size.height)! / (photo.image?.size.width)!)
@@ -54,26 +60,45 @@ class YLPhotoBrowser: UIViewController {
         
         view.backgroundColor = PhotoBrowserBG
         
-        imageView = UIImageView.init(frame: CGRect.init(x: 0, y: 0, width: YLScreenW, height: YLScreenH))
-        
-        imageView.image = UIImage(named: "数组操作")
-        
-        imageView.contentMode = UIViewContentMode.scaleAspectFit
-        
-        view.addSubview(imageView)
-
         view.isUserInteractionEnabled = true
+
+        view.addGestureRecognizer(UIPanGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.pan(_:))))
+        view.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.tap)))
         
-        view.addGestureRecognizer(UIPanGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.imageViewPan(_:))))
-        view.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.imageViewTap)))
+        layoutUI()
     }
     
-    func imageViewTap() {
+    private func layoutUI() {
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: YLScreenW, height: YLScreenH)
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
+        layout.scrollDirection = UICollectionViewScrollDirection.horizontal
+        
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        
+        collectionView.backgroundColor = UIColor.clear
+        collectionView.isPagingEnabled = true
+        
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        view.addSubview(collectionView)
+    }
+    
+    func tap() {
         self.transitioningDelegate = appearAnimatedTransition
         dismiss(animated: true, completion: nil)
     }
     
-    func imageViewPan(_ pan: UIPanGestureRecognizer) {
+    func pan(_ pan: UIPanGestureRecognizer) {
+        
+        if currentImageView == nil {
+            return
+        }
         
         let translation = pan.translation(in:  pan.view)
         
@@ -97,9 +122,9 @@ class YLPhotoBrowser: UIViewController {
             break
         case .changed:
 
-            imageView.transform = CGAffineTransform.init(scaleX: scale, y: scale)
+            currentImageView?.transform = CGAffineTransform.init(scaleX: scale, y: scale)
             
-            imageView.center = CGPoint.init(x: transitionImgViewCenter.x + translation.x * scale, y: transitionImgViewCenter.y + translation.y * scale)
+            currentImageView?.center = CGPoint.init(x: imageViewCenter.x + translation.x * scale, y: imageViewCenter.y + translation.y * scale)
             
             break
         case .failed,.cancelled,.ended:
@@ -108,22 +133,78 @@ class YLPhotoBrowser: UIViewController {
                 UIView.animate(withDuration: 0.2, animations: {
                     [weak self] in
                     
-                    self?.imageView.center = (self?.transitionImgViewCenter)!
-                    self?.imageView.transform = CGAffineTransform.init(scaleX: 1, y: 1)
+                    self?.currentImageView?.center = (self?.imageViewCenter)!
+                    self?.currentImageView?.transform = CGAffineTransform.init(scaleX: 1, y: 1)
                     }, completion: { [weak self] (finished: Bool) in
                     
-                        self?.imageView.transform = CGAffineTransform.identity
+                        self?.currentImageView?.transform = CGAffineTransform.identity
                         
                 })
             }else {
-                self.imageView.isHidden = true
+                self.currentImageView?.isHidden = true
             }
             
-            disappearAnimatedTransition?.currentImage = imageView.image
-            disappearAnimatedTransition?.currentImageViewFrame = imageView.frame
+            disappearAnimatedTransition?.currentImage = currentImageView?.image
+            disappearAnimatedTransition?.currentImageViewFrame = currentImageView?.frame
             disappearAnimatedTransition?.beforeImageViewFrame = CGRect.init(x: 10, y: 100, width: YLScreenW / 2 - 20, height: YLScreenW / 2 - 20)
             
             break
         }
     }
+}
+
+// MARK: - UICollectionViewDelegate,UICollectionViewDataSource
+extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let photos = self.photos {
+            return photos.count
+        }else {
+            return 0
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        
+        for view in cell.subviews {
+            view.removeFromSuperview()
+        }
+        
+        let photo = photos?[indexPath.row]
+        
+        let imageView = UIImageView.init(frame: CGRect.init(x: 0, y: 0, width: YLScreenW, height: YLScreenH))
+
+        imageView.tag = 100
+        
+        imageView.image = photo?.image
+
+        imageView.contentMode = UIViewContentMode.scaleAspectFit
+
+        cell.addSubview(imageView)
+
+        if indexPath.row == index {
+            currentImageView = imageView
+        }
+        
+        return cell
+        
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        
+        index = Int(scrollView.contentOffset.x / YLScreenW)
+        
+        let cell = collectionView.cellForItem(at: IndexPath.init(row: index, section: 0))
+        
+        if let imgView = cell?.viewWithTag(100) {
+            currentImageView = imgView as? UIImageView
+        }
+    }
+    
 }

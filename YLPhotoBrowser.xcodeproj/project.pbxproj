@@ -8,11 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		4FAB20FFC845CE2DB099F594 /* Pods_YLPhotoBrowser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8A7DF9E07E129770E987270 /* Pods_YLPhotoBrowser.framework */; };
+		793A891C1F2841A600329CA8 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 793A891B1F2841A600329CA8 /* 1.png */; };
 		79829D881F26D5A7009D3F61 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829D871F26D5A7009D3F61 /* AppDelegate.swift */; };
 		79829D8A1F26D5A7009D3F61 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829D891F26D5A7009D3F61 /* ViewController.swift */; };
 		79829D8F1F26D5A7009D3F61 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79829D8E1F26D5A7009D3F61 /* Assets.xcassets */; };
 		79829D921F26D5A7009D3F61 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79829D901F26D5A7009D3F61 /* LaunchScreen.storyboard */; };
-		79829D9B1F26D83E009D3F61 /* 数组操作.png in Resources */ = {isa = PBXBuildFile; fileRef = 79829D9A1F26D83E009D3F61 /* 数组操作.png */; };
+		79829D9B1F26D83E009D3F61 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 79829D9A1F26D83E009D3F61 /* 2.png */; };
 		79829D9D1F26D8F4009D3F61 /* YLPhotoBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829D9C1F26D8F4009D3F61 /* YLPhotoBrowser.swift */; };
 		79829D9F1F26DD9F009D3F61 /* YLAnimatedTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829D9E1F26DD9F009D3F61 /* YLAnimatedTransition.swift */; };
 		79829DA11F26DECB009D3F61 /* YLPushAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829DA01F26DECB009D3F61 /* YLPushAnimator.swift */; };
@@ -22,13 +23,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		793A891B1F2841A600329CA8 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
 		79829D841F26D5A7009D3F61 /* YLPhotoBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YLPhotoBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79829D871F26D5A7009D3F61 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		79829D891F26D5A7009D3F61 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		79829D8E1F26D5A7009D3F61 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		79829D911F26D5A7009D3F61 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		79829D931F26D5A7009D3F61 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		79829D9A1F26D83E009D3F61 /* 数组操作.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "数组操作.png"; sourceTree = "<group>"; };
+		79829D9A1F26D83E009D3F61 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
 		79829D9C1F26D8F4009D3F61 /* YLPhotoBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhotoBrowser.swift; sourceTree = "<group>"; };
 		79829D9E1F26DD9F009D3F61 /* YLAnimatedTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLAnimatedTransition.swift; sourceTree = "<group>"; };
 		79829DA01F26DECB009D3F61 /* YLPushAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPushAnimator.swift; sourceTree = "<group>"; };
@@ -76,7 +78,8 @@
 				79829D991F26D790009D3F61 /* YLPhotoBrowser */,
 				79829D871F26D5A7009D3F61 /* AppDelegate.swift */,
 				79829D891F26D5A7009D3F61 /* ViewController.swift */,
-				79829D9A1F26D83E009D3F61 /* 数组操作.png */,
+				79829D9A1F26D83E009D3F61 /* 2.png */,
+				793A891B1F2841A600329CA8 /* 1.png */,
 				79829D8E1F26D5A7009D3F61 /* Assets.xcassets */,
 				79829D901F26D5A7009D3F61 /* LaunchScreen.storyboard */,
 				79829D931F26D5A7009D3F61 /* Info.plist */,
@@ -177,8 +180,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				79829D921F26D5A7009D3F61 /* LaunchScreen.storyboard in Resources */,
+				793A891C1F2841A600329CA8 /* 1.png in Resources */,
 				79829D8F1F26D5A7009D3F61 /* Assets.xcassets in Resources */,
-				79829D9B1F26D83E009D3F61 /* 数组操作.png in Resources */,
+				79829D9B1F26D83E009D3F61 /* 2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

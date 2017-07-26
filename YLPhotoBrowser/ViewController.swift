@@ -12,34 +12,38 @@ class ViewController: UIViewController {
 
     var animatedTransition:YLAnimatedTransition = YLAnimatedTransition()
     
+    var imageView:UIImageView!
+    var imageView1:UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let imageView = UIImageView.init(frame: CGRect.init(x: 10, y: 100, width: YLScreenW / 2 - 20, height: YLScreenW / 2 - 20))
+        imageView = UIImageView.init(frame: CGRect.init(x: 10, y: 100, width: YLScreenW / 2 - 20, height: YLScreenW / 2 - 20))
         
-        imageView.image = UIImage(named: "数组操作")
+        imageView.image = UIImage(named: "1")
         
         view.addSubview(imageView)
         
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(ViewController.tapImageView(_:))))
         
-        let imageView1 = UIImageView.init(frame: CGRect.init(x: YLScreenW / 2 + 10 , y: 100, width: YLScreenW / 2 - 20, height: YLScreenW / 2 - 20))
+        imageView1 = UIImageView.init(frame: CGRect.init(x: YLScreenW / 2 + 10 , y: 100, width: YLScreenW / 2 - 20, height: YLScreenW / 2 - 20))
         
-        imageView1.image = UIImage(named: "数组操作")
+        imageView1.image = UIImage(named: "2")
         
         view.addSubview(imageView1)
+        imageView1.isUserInteractionEnabled = true
+        imageView1.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(ViewController.tapImageView(_:))))
         
     }
 
     func tapImageView(_ tap:UITapGestureRecognizer) {
     
-        let imgView = tap.view as! UIImageView
-        
         var photos = [YLPhoto]()
-        photos.append(YLPhoto.addImage(imgView.image!, frame: imgView.frame))
+        photos.append(YLPhoto.addImage(imageView.image!, frame: imageView.frame))
+        photos.append(YLPhoto.addImage(imageView1.image!, frame: imageView1.frame))
         
-        let photoBrowser = YLPhotoBrowser.init(photos, index: 0)
+        let photoBrowser = YLPhotoBrowser.init(photos, index: 1)
         
         present(photoBrowser, animated: true, completion: nil)
     }
