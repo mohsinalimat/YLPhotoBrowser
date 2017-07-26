@@ -20,9 +20,7 @@ class YLPhotoBrowser: UIViewController {
     fileprivate var photos: [YLPhoto]? // 图片
     fileprivate var currentIndex: Int = 0 // 当前row
     fileprivate var currentImageView:UIImageView? // 当前图片
-    // 默认用户选择的图片位置
-    fileprivate var defaultBeforeImgFrame = CGRect.zero
-    
+
     fileprivate var appearAnimatedTransition:YLAnimatedTransition? // 进来的动画
     fileprivate var disappearAnimatedTransition:YLAnimatedTransition? // 出去的动画
     
@@ -50,8 +48,6 @@ class YLPhotoBrowser: UIViewController {
         self.currentIndex = index
         
         let photo = photos[index]
-        
-        defaultBeforeImgFrame = photo.frame ?? CGRect.zero
         
         editTransitioningDelegate(photo)
     }
@@ -162,9 +158,9 @@ class YLPhotoBrowser: UIViewController {
                 })
             }else {
                 self.currentImageView?.isHidden = true
-                disappearAnimatedTransition?.currentImage = currentImageView?.image
+                disappearAnimatedTransition?.currentImage = photos?[currentIndex].image
                 disappearAnimatedTransition?.currentImageViewFrame = currentImageView?.frame ?? CGRect.zero
-                disappearAnimatedTransition?.beforeImageViewFrame = photos?[currentIndex].frame ?? defaultBeforeImgFrame
+                disappearAnimatedTransition?.beforeImageViewFrame = photos?[currentIndex].frame ?? CGRect.zero
             }
             
             break
@@ -174,17 +170,24 @@ class YLPhotoBrowser: UIViewController {
     // 获取imageView frame
     func getImageViewFrame(_ size: CGSize) -> CGRect {
         
-        let height = YLScreenW * (size.height / size.width)
-        let frame = CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height)
+        if size.width > YLScreenW {
+            let height = YLScreenW * (size.height / size.width)
+            let frame = CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height)
+            
+            return frame
+
+        }else {
+            let frame = CGRect.init(x: YLScreenW/2 - size.width/2, y: YLScreenH/2 - size.height/2, width: size.width, height: size.height)
+            return frame
+        }
         
-        return frame
-    }
+}
     
     // 修改 transitioningDelegate
     func editTransitioningDelegate(_ photo: YLPhoto) {
     
         appearAnimatedTransition = nil
-        appearAnimatedTransition = YLAnimatedTransition.init(photo.image, beforeImgFrame: photo.frame ?? defaultBeforeImgFrame, afterImgFrame: photo.image != nil ? getImageViewFrame((photo.image?.size)!):getImageViewFrame(CGSize.init(width: YLScreenW, height: YLScreenW)))
+        appearAnimatedTransition = YLAnimatedTransition.init(photo.image, beforeImgFrame: photo.frame, afterImgFrame: photo.image != nil ? getImageViewFrame((photo.image?.size)!):getImageViewFrame(CGSize.init(width: YLScreenW, height: YLScreenW)))
         
         self.transitioningDelegate = appearAnimatedTransition
         
@@ -222,12 +225,17 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
             
             imageView.frame.size = CGSize.init(width: YLScreenW, height: YLScreenW)
             imageView.center = imageViewCenter
+            
             imageView.sd_setShowActivityIndicatorView(true)
             imageView.sd_setIndicatorStyle(.white)
+            
             var webImageOptions = SDWebImageOptions.retryFailed
             webImageOptions.formUnion(SDWebImageOptions.progressiveDownload)
             imageView.sd_setImage(with: URL(string: (photo?.imageUrl)!), placeholderImage: nil, options: webImageOptions, completed: { [weak self] (image:UIImage?, error:Error?, cacheType:SDImageCacheType, url:URL?) in
                 guard let img = image else {
+                    let img = UIImage.init(named: "load_error")
+                    imageView.frame = (self?.getImageViewFrame((img?.size)!))!
+                    imageView.image = img
                     
                     return
                 }
