@@ -28,7 +28,6 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
     private var isFirst = true
     
     deinit {
-        print("释放:\(self)")
         gestureRecognizer = nil
     }
     

@@ -19,15 +19,14 @@ class YLPhotoBrowser: UIViewController {
     
     fileprivate var photos: [YLPhoto]? // 图片
     fileprivate var currentIndex: Int = 0 // 当前row
-    fileprivate var currentImageView:UIImageView? // 当前图片
-
+    
     fileprivate var appearAnimatedTransition:YLAnimatedTransition? // 进来的动画
     fileprivate var disappearAnimatedTransition:YLAnimatedTransition? // 出去的动画
     
     fileprivate var collectionView:UICollectionView!
     fileprivate var pageControl:UIPageControl?
     
-    fileprivate var imageViewCenter = CGPoint.init(x: YLScreenW/2, y: YLScreenH/2)
+    fileprivate var imageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -41,6 +40,7 @@ class YLPhotoBrowser: UIViewController {
         print("释放:\(self)")
     }
     
+    // 初始化
     convenience init(_ photos: [YLPhoto],index: Int) {
         self.init()
         
@@ -57,7 +57,7 @@ class YLPhotoBrowser: UIViewController {
         view.backgroundColor = PhotoBrowserBG
         
         view.isUserInteractionEnabled = true
-
+        
         view.addGestureRecognizer(UIPanGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.pan(_:))))
         let singleTap = UITapGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.singleTap))
         view.addGestureRecognizer(singleTap)
@@ -72,6 +72,7 @@ class YLPhotoBrowser: UIViewController {
         collectionView.contentOffset.x = YLScreenW * CGFloat(currentIndex)
     }
     
+    // 绘制 UI
     private func layoutUI() {
         
         let layout = UICollectionViewFlowLayout()
@@ -109,7 +110,7 @@ class YLPhotoBrowser: UIViewController {
     
     // 单击手势
     func singleTap() {
-    
+        
         if let photo = photos?[currentIndex]{
             editTransitioningDelegate(photo)
             dismiss(animated: true, completion: nil)
@@ -118,7 +119,9 @@ class YLPhotoBrowser: UIViewController {
     
     // 双击手势
     func doubleTap() {
-    
+        
+        let currentImageView = getCurrentImageView()
+        
         if currentImageView == nil {
             return
         }else if currentImageView?.image == nil {
@@ -130,7 +133,7 @@ class YLPhotoBrowser: UIViewController {
             if scrollView.zoomScale == 1 {
                 
                 let scale = YLScreenH / (currentImageView?.frame.size.height ?? YLScreenH)
-            
+                
                 scrollView.setZoomScale(scale > 4 ? 4: scale, animated: true)
             }else {
                 scrollView.setZoomScale(1, animated: true)
@@ -141,6 +144,8 @@ class YLPhotoBrowser: UIViewController {
     
     // 慢移手势
     func pan(_ pan: UIPanGestureRecognizer) {
+        
+        let currentImageView = getCurrentImageView()
         
         if currentImageView == nil {
             return
@@ -188,16 +193,17 @@ class YLPhotoBrowser: UIViewController {
                     UIView.animate(withDuration: 0.2, animations: {
                         [weak self] in
                         
-                        self?.currentImageView?.center = (self?.imageViewCenter)!
-                        self?.currentImageView?.transform = CGAffineTransform.init(scaleX: 1, y: 1)
-                        }, completion: { [weak self] (finished: Bool) in
+                        currentImageView?.center = (self?.imageViewCenter)!
+                        currentImageView?.transform = CGAffineTransform.init(scaleX: 1, y: 1)
+                        }, completion: { (finished: Bool) in
                             
-                            self?.currentImageView?.transform = CGAffineTransform.identity
+                            currentImageView?.transform = CGAffineTransform.identity
                             
                     })
                     scrollView.delegate = self
                 }else {
-                    self.currentImageView?.isHidden = true
+                    
+                    currentImageView?.isHidden = true
                     disappearAnimatedTransition?.currentImage = photos?[currentIndex].image
                     disappearAnimatedTransition?.currentImageViewFrame = currentImageView?.frame ?? CGRect.zero
                     disappearAnimatedTransition?.beforeImageViewFrame = photos?[currentIndex].frame ?? CGRect.zero
@@ -217,17 +223,33 @@ class YLPhotoBrowser: UIViewController {
             let frame = CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height)
             
             return frame
-
+            
         }else {
             let frame = CGRect.init(x: YLScreenW/2 - size.width/2, y: YLScreenH/2 - size.height/2, width: size.width, height: size.height)
             return frame
         }
         
-}
+    }
+    
+    // 获取 currentImageView
+    func getCurrentImageView() -> UIImageView? {
+        
+        if collectionView == nil {
+            return nil
+        }
+        
+        let cell = collectionView.cellForItem(at: IndexPath.init(row: currentIndex, section: 0))
+        
+        if let imgView = cell?.viewWithTag(100) {
+            return imgView as? UIImageView
+        }else {
+            return nil
+        }
+    }
     
     // 修改 transitioningDelegate
     func editTransitioningDelegate(_ photo: YLPhoto) {
-    
+        
         if photo.image == nil {
             let url = SDWebImageManager.shared().cacheKey(for: URL.init(string: photo.imageUrl))
             if let image =  SDImageCache.shared().imageFromCache(forKey: url) {
@@ -235,7 +257,8 @@ class YLPhotoBrowser: UIViewController {
             }
         }
         
-        appearAnimatedTransition = nil
+        let currentImageView = getCurrentImageView()
+        
         var afterImgFrame = CGRect.zero
         if currentImageView != nil {
             afterImgFrame = (currentImageView?.frame)!
@@ -245,6 +268,7 @@ class YLPhotoBrowser: UIViewController {
             afterImgFrame = getImageViewFrame(CGSize.init(width: YLScreenW, height: YLScreenW))
         }
         
+        appearAnimatedTransition = nil
         appearAnimatedTransition = YLAnimatedTransition.init(photo.image, beforeImgFrame: photo.frame, afterImgFrame:afterImgFrame)
         
         self.transitioningDelegate = appearAnimatedTransition
@@ -324,32 +348,21 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
         imageView.tag = 100
         
         imageView.contentMode = UIViewContentMode.scaleAspectFit
-
+        
         scrollView.contentSize = imageView.frame.size
         scrollView.addSubview(imageView)
-
-        if indexPath.row == currentIndex {
-            currentImageView = imageView
-        }
         
         return cell
         
     }
-
+    
     // 已经停止减速
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
         if scrollView == collectionView {
+            
             currentIndex = Int(scrollView.contentOffset.x / YLScreenW)
-            print(scrollView.contentOffset.x / YLScreenW)
             pageControl?.currentPage = currentIndex
-            
-            let cell = collectionView.cellForItem(at: IndexPath.init(row: currentIndex, section: 0))
-            
-            if let imgView = cell?.viewWithTag(100) {
-                currentImageView = imgView as? UIImageView
-            }
-
         }
     }
     
@@ -369,10 +382,10 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
             let size = scrollView.bounds.size
             
             let offsetX = (size.width > scrollView.contentSize.width) ?
-            (size.width - scrollView.contentSize.width) * 0.5 : 0.0
+                (size.width - scrollView.contentSize.width) * 0.5 : 0.0
             
             let offsetY = (size.height > scrollView.contentSize.height) ?
-            (size.height - scrollView.contentSize.height) * 0.5 : 0.0
+                (size.height - scrollView.contentSize.height) * 0.5 : 0.0
             
             scrollView.viewWithTag(100)?.center = CGPoint.init(x: scrollView.contentSize.width * 0.5 + offsetX, y: scrollView.contentSize.height * 0.5 + offsetY)
             

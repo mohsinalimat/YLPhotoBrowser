@@ -13,7 +13,7 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
     var transitionImage: UIImage?
     var transitionBeforeImgFrame: CGRect = CGRect.zero
     var transitionAfterImgFrame: CGRect = CGRect.zero
- 
+    
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.5
     }
@@ -35,9 +35,10 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         toView?.isHidden = true
         
         if transitionBeforeImgFrame == CGRect.zero {
+            
             toView?.isHidden = false
             toView?.alpha = 0
-
+            
             UIView.animate(withDuration: 0.3, animations: {
                 
                 toView?.alpha = 1

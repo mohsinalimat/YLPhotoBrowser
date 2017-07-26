@@ -27,7 +27,7 @@ class YLAnimatedTransition: NSObject,UIViewControllerTransitioningDelegate {
     }
     var gestureRecognizer: UIPanGestureRecognizer! {
         didSet {
-            percentIntractive.gestureRecognizer = gestureRecognizer 
+            percentIntractive.gestureRecognizer = gestureRecognizer
         }
     }
     
@@ -36,7 +36,7 @@ class YLAnimatedTransition: NSObject,UIViewControllerTransitioningDelegate {
     private var percentIntractive:YLDrivenInteractive = YLDrivenInteractive()
     
     deinit {
-        print("释放:\(self)")
+        
     }
     
     convenience init(_ image: UIImage?,beforeImgFrame: CGRect? ,afterImgFrame: CGRect?) {
