@@ -57,7 +57,7 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return dataArray.count
+        return dataArray.count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -68,11 +68,20 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
             view.removeFromSuperview()
         }
         
-        let imageName = dataArray[indexPath.row]
-        
         let imageView = UIImageView.init(frame: cell.bounds)
         
-        imageView.image = UIImage(named: imageName)
+        if indexPath.row == dataArray.count {
+            let path = Bundle.main.path(forResource: "3.gif", ofType: nil)
+            let data = try? Data.init(contentsOf: URL.init(fileURLWithPath: path!))
+            let image = UIImage.sd_animatedGIF(with: data)
+            
+            imageView.image = image
+            imageView.animationDuration = 1
+            imageView.startAnimating()
+        }else {
+            let imageName = dataArray[indexPath.row]
+            imageView.image = UIImage(named: imageName)
+        }
         
         cell.addSubview(imageView)
         
@@ -98,6 +107,12 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
             photos.append(YLPhoto.addImage(UIImage.init(named: imageName), imageUrl: nil, frame: rect2))
             
         }
+        
+        let path = Bundle.main.path(forResource: "3.gif", ofType: nil)
+        let data = try? Data.init(contentsOf: URL.init(fileURLWithPath: path!))
+        let image = UIImage.sd_animatedGIF(with: data)
+        
+        photos.append(YLPhoto.addImage(image, imageUrl: nil, frame: nil))
         
         // 没有图片位置的
         photos.append(YLPhoto.addImage(nil, imageUrl: "http://f1.diyitui.com/e0/d8/18/1e/2b/3c/ef/39/64/e4/00/7c/d2/c6/f3/df.jpg", frame: nil))

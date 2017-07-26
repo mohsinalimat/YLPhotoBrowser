@@ -20,6 +20,7 @@
 		79829DA31F26DEFE009D3F61 /* YLPopAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829DA21F26DEFE009D3F61 /* YLPopAnimator.swift */; };
 		79829DA51F26E076009D3F61 /* YLDrivenInteractive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829DA41F26E076009D3F61 /* YLDrivenInteractive.swift */; };
 		81B0DF021F27699300049E1C /* YLPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B0DF011F27699300049E1C /* YLPhoto.swift */; };
+		81E56E611F28CF8300CE9DEA /* 3.gif in Resources */ = {isa = PBXBuildFile; fileRef = 81E56E601F28CF8300CE9DEA /* 3.gif */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		79829DA21F26DEFE009D3F61 /* YLPopAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPopAnimator.swift; sourceTree = "<group>"; };
 		79829DA41F26E076009D3F61 /* YLDrivenInteractive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLDrivenInteractive.swift; sourceTree = "<group>"; };
 		81B0DF011F27699300049E1C /* YLPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhoto.swift; sourceTree = "<group>"; };
+		81E56E601F28CF8300CE9DEA /* 3.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 3.gif; sourceTree = "<group>"; };
 		C04C4D4C948817C78C8A7B3C /* Pods-YLPhotoBrowser.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YLPhotoBrowser.release.xcconfig"; path = "Pods/Target Support Files/Pods-YLPhotoBrowser/Pods-YLPhotoBrowser.release.xcconfig"; sourceTree = "<group>"; };
 		D8A7DF9E07E129770E987270 /* Pods_YLPhotoBrowser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YLPhotoBrowser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E745048318E5F1C65758906B /* Pods-YLPhotoBrowser.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YLPhotoBrowser.debug.xcconfig"; path = "Pods/Target Support Files/Pods-YLPhotoBrowser/Pods-YLPhotoBrowser.debug.xcconfig"; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 				79829D891F26D5A7009D3F61 /* ViewController.swift */,
 				79829D9A1F26D83E009D3F61 /* 2.png */,
 				793A891B1F2841A600329CA8 /* 1.png */,
+				81E56E601F28CF8300CE9DEA /* 3.gif */,
 				79829D8E1F26D5A7009D3F61 /* Assets.xcassets */,
 				79829D901F26D5A7009D3F61 /* LaunchScreen.storyboard */,
 				79829D931F26D5A7009D3F61 /* Info.plist */,
@@ -183,6 +186,7 @@
 				793A891C1F2841A600329CA8 /* 1.png in Resources */,
 				79829D8F1F26D5A7009D3F61 /* Assets.xcassets in Resources */,
 				79829D9B1F26D83E009D3F61 /* 2.png in Resources */,
+				81E56E611F28CF8300CE9DEA /* 3.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
