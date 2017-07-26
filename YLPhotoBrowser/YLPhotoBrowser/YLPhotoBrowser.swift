@@ -37,7 +37,6 @@ class YLPhotoBrowser: UIViewController {
     deinit {
         transitioningDelegate = nil
         appearAnimatedTransition = nil
-        print("释放:\(self)")
     }
     
     // 初始化
