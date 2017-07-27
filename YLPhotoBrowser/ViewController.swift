@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ViewController: UIViewController {
-
+    
     fileprivate var collectionView:UICollectionView!
     fileprivate var dataArray = [String]()
     
@@ -19,7 +20,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataArray += ["1","2","1","2"]
+        dataArray += ["1","2","3"]
+        dataArray += ["http://ww2.sinaimg.cn/bmiddle/72635b6agw1eyqehvujq1j218g0p0qai.jpg",
+                      "http://ww2.sinaimg.cn/bmiddle/e67669aagw1f1v6w3ya5vj20hk0qfq86.jpg",
+                      "http://ww3.sinaimg.cn/bmiddle/61e36371gw1f1v6zegnezg207p06fqv6.gif",
+                      "http://ww4.sinaimg.cn/bmiddle/7f02d774gw1f1dxhgmh3mj20cs1tdaiv.jpg"]
         
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: YLScreenW / 3 - 10, height: YLScreenW / 3 - 20)
@@ -39,13 +44,13 @@ class ViewController: UIViewController {
         view.addSubview(collectionView)
         
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
+    
+    
 }
 
 // MARK: - UICollectionViewDelegate,UICollectionViewDataSource
@@ -57,7 +62,7 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return dataArray.count + 1
+        return dataArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -69,18 +74,16 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
         }
         
         let imageView = UIImageView.init(frame: cell.bounds)
+        imageView.tag = 100
         
-        if indexPath.row == dataArray.count {
-            let path = Bundle.main.path(forResource: "3.gif", ofType: nil)
-            let data = try? Data.init(contentsOf: URL.init(fileURLWithPath: path!))
-            let image = UIImage.sd_animatedGIF(with: data)
+        if indexPath.row <= 2 {
+        
+            let path = dataArray[indexPath.row]
+            imageView.image = UIImage.init(named: path)
             
-            imageView.image = image
-            imageView.animationDuration = 1
-            imageView.startAnimating()
         }else {
-            let imageName = dataArray[indexPath.row]
-            imageView.image = UIImage(named: imageName)
+            let url = dataArray[indexPath.row]
+            imageView.kf.setImage(with: URL.init(string: url))
         }
         
         cell.addSubview(imageView)
@@ -94,7 +97,7 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
         
         for i in 0...dataArray.count - 1 {
             
-            let imageName = dataArray[i]
+            
             
             let window = UIApplication.shared.keyWindow
             
@@ -103,23 +106,17 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
             let rect1 = cell?.convert(cell?.frame ?? CGRect.zero, from: collectionView)
             let rect2 = cell?.convert(rect1 ?? CGRect.zero, to: window)
             
-            // 有图片位置的
-            photos.append(YLPhoto.addImage(UIImage.init(named: imageName), imageUrl: nil, frame: rect2))
-            
+            if indexPath.row <= 2 {
+                let path = dataArray[i]
+                photos.append(YLPhoto.addImage(UIImage.init(named: path), imageUrl: nil, frame: rect2))
+                
+            }else {
+                // let imageView:UIImageView? = cell?.viewWithTag(100) as! UIImageView?
+                // photos.append(YLPhoto.addImage(imageView?.image, imageUrl: url, frame: rect2))
+                let url = dataArray[i]
+                photos.append(YLPhoto.addImage(nil, imageUrl: url, frame: rect2))
+            }
         }
-        
-        let path = Bundle.main.path(forResource: "3.gif", ofType: nil)
-        let data = try? Data.init(contentsOf: URL.init(fileURLWithPath: path!))
-        let image = UIImage.sd_animatedGIF(with: data)
-        
-        photos.append(YLPhoto.addImage(image, imageUrl: nil, frame: nil))
-        
-        // 没有图片位置的
-        photos.append(YLPhoto.addImage(nil, imageUrl: "http://f1.diyitui.com/e0/d8/18/1e/2b/3c/ef/39/64/e4/00/7c/d2/c6/f3/df.jpg", frame: nil))
-        photos.append(YLPhoto.addImage(nil, imageUrl: "http://photo.l99.com/bigger/6be/1453181740508_ksepb0.jpg", frame: nil))
-        photos.append(YLPhoto.addImage(nil, imageUrl: "http://img.meimi.cc/meinv/20170608/lugudlsxna117230.jpg", frame: nil))
-        
-        
         
         let photoBrowser = YLPhotoBrowser.init(photos, index: indexPath.row)
         

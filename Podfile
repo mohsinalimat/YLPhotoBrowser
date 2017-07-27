@@ -9,7 +9,7 @@ use_frameworks!
 # Pods for YLPhotoBrowser
 
 
-pod 'SDWebImage', '~> 4.0.0'
+pod 'Kingfisher', '~> 3.10.2'
 
 
 end

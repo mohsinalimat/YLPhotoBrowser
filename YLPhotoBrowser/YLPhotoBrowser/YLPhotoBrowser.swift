@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import SDWebImage
+import Kingfisher
 
 let PhotoBrowserBG = UIColor.black
 let ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
@@ -131,9 +131,11 @@ class YLPhotoBrowser: UIViewController {
             let scrollView = currentImageView?.superview as! UIScrollView
             if scrollView.zoomScale == 1 {
                 
-                let scale = YLScreenH / (currentImageView?.frame.size.height ?? YLScreenH)
+                var scale = YLScreenH / (currentImageView?.frame.size.height ?? YLScreenH)
+                scale = scale > 4 ? 4: scale
+                scale = scale < 1 ? 2: scale
                 
-                scrollView.setZoomScale(scale > 4 ? 4: scale, animated: true)
+                scrollView.setZoomScale(scale, animated: true)
             }else {
                 scrollView.setZoomScale(1, animated: true)
             }
@@ -221,9 +223,20 @@ class YLPhotoBrowser: UIViewController {
         
         if size.width > YLScreenW {
             let height = YLScreenW * (size.height / size.width)
-            let frame = CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height)
+            if height <= YLScreenH {
+                
+                let frame = CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height)
+                
+                return frame
+                
+            }else {
             
-            return frame
+                let frame = CGRect.init(x: 0, y: 0, width: YLScreenW, height: height)
+                
+                return frame
+            
+            }
+            
             
         }else {
             let frame = CGRect.init(x: YLScreenW/2 - size.width/2, y: YLScreenH/2 - size.height/2, width: size.width, height: size.height)
@@ -252,9 +265,13 @@ class YLPhotoBrowser: UIViewController {
     func editTransitioningDelegate(_ photo: YLPhoto) {
         
         if photo.image == nil {
-            let url = SDWebImageManager.shared().cacheKey(for: URL.init(string: photo.imageUrl))
-            if let image =  SDImageCache.shared().imageFromCache(forKey: url) {
-                photo.image = image
+            
+            let isCached = KingfisherManager.shared.cache.isImageCached(forKey: photo.imageUrl).cached
+            
+            if isCached {
+                KingfisherManager.shared.retrieveImage(with: URL.init(string: photo.imageUrl)!, options: nil, progressBlock: nil, completionHandler: { (image:Image?, _, _, _) in
+                    photo.image = image
+                })
             }
         }
         

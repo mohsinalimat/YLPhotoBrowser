@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SDWebImage
+import Kingfisher
 
 class YLPhotoCell: UICollectionViewCell {
     
@@ -49,23 +49,22 @@ class YLPhotoCell: UICollectionViewCell {
         
         self.addSubview(scrollView)
         
-        scrollView.contentSize = imageView.frame.size
         scrollView.addSubview(imageView)
     }
     
-    func updatePhoto(_ photo: YLPhoto?) {
+    func updatePhoto(_ photo: YLPhoto) {
     
-        if photo?.imageUrl != "" {
+        if photo.imageUrl != "" {
             
             imageView.frame.size = CGSize.init(width: YLScreenW, height: YLScreenW)
             imageView.center = ImageViewCenter
             
-            imageView.sd_setShowActivityIndicatorView(true)
-            imageView.sd_setIndicatorStyle(.white)
+            imageView.kf.setImage(with: URL(string: photo.imageUrl), placeholder: nil, options: [.transition(.fade(1))], progressBlock: { (receivedSize:Int64, totalSize:Int64) in
             
-            var webImageOptions = SDWebImageOptions.retryFailed
-            webImageOptions.formUnion(SDWebImageOptions.progressiveDownload)
-            imageView.sd_setImage(with: URL(string: (photo?.imageUrl)!), placeholderImage: nil, options: webImageOptions, completed: { [weak self] (image:UIImage?, error:Error?, cacheType:SDImageCacheType, url:URL?) in
+                
+                
+            }, completionHandler: { [weak self] (image:Image?, _, _, _) in
+            
                 guard let img = image else {
                     let image = UIImage.init(named: "load_error")
                     self?.imageView.frame = YLPhotoBrowser.getImageViewFrame(image?.size ?? CGSize.zero)
@@ -75,12 +74,16 @@ class YLPhotoCell: UICollectionViewCell {
                 }
                 self?.imageView.frame = YLPhotoBrowser.getImageViewFrame(img.size)
                 self?.imageView.image = img
-                photo?.image = image
+                photo.image = image
+                
+                self?.scrollView.contentSize = self?.imageView.frame.size ?? CGSize.zero
             })
-        }else if photo?.image != nil {
             
-            imageView.image = photo?.image
-            imageView.frame = YLPhotoBrowser.getImageViewFrame((photo?.image?.size)!)
+        }else if let image = photo.image {
+            
+            imageView.image = image
+            imageView.frame = YLPhotoBrowser.getImageViewFrame(image.size)
+            scrollView.contentSize = imageView.frame.size
             
         }
     }
