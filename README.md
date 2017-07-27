@@ -2,10 +2,11 @@
 
     仿微信图片浏览器                                         
 
-    ![gif](https://github.com/February12/YLPhotoBrowser/tree/master/RImage/动画.gif)
+    ![image](https://github.com/February12/YLPhotoBrowser/tree/master/RImage/动画.gif)
 
 
-# 使用
+# 使用  简单易用,拖拽取消
+    var photos = [YLPhoto]()                       
     photos.append(YLPhoto.addImage(image, imageUrl: nil, frame: rect2))
     let photoBrowser = YLPhotoBrowser.init(photos, index: indexPath.row)
     present(photoBrowser, animated: true, completion: nil)
