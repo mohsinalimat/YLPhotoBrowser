@@ -20,14 +20,23 @@ class YLPhotoCell: UICollectionViewCell {
         return sv
     }()
     
+    // 图片容器
     let imageView: UIImageView = {
         
         let imgView = UIImageView()
-        imgView.backgroundColor = UIColor.init(red: 244/255.0, green: 244/255.0, blue: 244/255.0, alpha: 0.1)
+        imgView.backgroundColor = UIColor.clear
         imgView.tag = ImageViewTag
         imgView.contentMode = UIViewContentMode.scaleAspectFit
         return imgView
         
+    }()
+    
+    // 进度条
+    let progressView: YLPhotoProgressView = {
+        let p = YLPhotoProgressView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        p.progress = 0
+        p.isHidden = true
+        return p
     }()
     
     override init(frame: CGRect) {
@@ -42,29 +51,35 @@ class YLPhotoCell: UICollectionViewCell {
     
     func layoutUI() {
         
-        self.backgroundColor = UIColor.clear
+        backgroundColor = UIColor.clear
         
         scrollView.frame = self.bounds
         scrollView.delegate = self
-        
-        self.addSubview(scrollView)
+        addSubview(scrollView)
         
         scrollView.addSubview(imageView)
+        
+        addSubview(progressView)
+        progressView.center = scrollView.center
     }
     
     func updatePhoto(_ photo: YLPhoto) {
     
         if photo.imageUrl != "" {
             
-            imageView.frame.size = CGSize.init(width: YLScreenW, height: YLScreenW)
+            imageView.frame.size = CGSize.init(width: YLScreenW - 40, height: YLScreenW - 40)
             imageView.center = ImageViewCenter
             
-            imageView.kf.setImage(with: URL(string: photo.imageUrl), placeholder: nil, options: [.transition(.fade(1))], progressBlock: { (receivedSize:Int64, totalSize:Int64) in
+            progressView.isHidden = false
             
-                
+            imageView.kf.setImage(with: URL(string: photo.imageUrl), placeholder: nil, options: [.transition(.fade(1))], progressBlock: { [weak self](receivedSize:Int64, totalSize:Int64) in
+            
+                self?.progressView.progress = CGFloat(receivedSize) / CGFloat(totalSize)
                 
             }, completionHandler: { [weak self] (image:Image?, _, _, _) in
             
+                self?.progressView.isHidden = true
+                
                 guard let img = image else {
                     
                     return
@@ -78,8 +93,8 @@ class YLPhotoCell: UICollectionViewCell {
             
         }else if let image = photo.image {
             
-            imageView.image = image
             imageView.frame = YLPhotoBrowser.getImageViewFrame(image.size)
+            imageView.image = image
             scrollView.contentSize = imageView.frame.size
             
         }

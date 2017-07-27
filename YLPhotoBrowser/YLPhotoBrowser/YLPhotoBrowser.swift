@@ -283,7 +283,7 @@ class YLPhotoBrowser: UIViewController {
         }else if photo.image != nil {
             afterImgFrame = YLPhotoBrowser.getImageViewFrame((photo.image?.size)!)
         }else {
-            afterImgFrame = YLPhotoBrowser.getImageViewFrame(CGSize.init(width: YLScreenW, height: YLScreenW))
+            afterImgFrame = YLPhotoBrowser.getImageViewFrame(CGSize.init(width: YLScreenW - 40, height: YLScreenW - 40))
         }
         
         appearAnimatedTransition = nil

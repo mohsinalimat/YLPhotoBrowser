@@ -132,13 +132,12 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
                 
                 let url = dataArray[i]
                 
-                // 最佳
+                 // 最佳
                  let imageView:UIImageView? = cell?.viewWithTag(100) as! UIImageView?
                  photos.append(YLPhoto.addImage(imageView?.image, imageUrl: url, frame: rect2))
                 
                 // 其次
-//                let url = dataArray[i]
-//                photos.append(YLPhoto.addImage(nil, imageUrl: url, frame: rect2))
+                // photos.append(YLPhoto.addImage(nil, imageUrl: url, frame: rect2))
             }
         }
         

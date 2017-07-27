@@ -22,6 +22,7 @@
 		79829DA51F26E076009D3F61 /* YLDrivenInteractive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829DA41F26E076009D3F61 /* YLDrivenInteractive.swift */; };
 		79B26C9D1F29A23D00568B4C /* YLGifImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B26C9C1F29A23D00568B4C /* YLGifImage.swift */; };
 		79B26C9F1F29A37F00568B4C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79B26C9E1F29A37F00568B4C /* MobileCoreServices.framework */; };
+		79B26CA11F29AE7600568B4C /* YLPhotoProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B26CA01F29AE7600568B4C /* YLPhotoProgressView.swift */; };
 		81B0DF021F27699300049E1C /* YLPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B0DF011F27699300049E1C /* YLPhoto.swift */; };
 		81E56E611F28CF8300CE9DEA /* 3.gif in Resources */ = {isa = PBXBuildFile; fileRef = 81E56E601F28CF8300CE9DEA /* 3.gif */; };
 /* End PBXBuildFile section */
@@ -43,6 +44,7 @@
 		79829DA41F26E076009D3F61 /* YLDrivenInteractive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLDrivenInteractive.swift; sourceTree = "<group>"; };
 		79B26C9C1F29A23D00568B4C /* YLGifImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLGifImage.swift; sourceTree = "<group>"; };
 		79B26C9E1F29A37F00568B4C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		79B26CA01F29AE7600568B4C /* YLPhotoProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhotoProgressView.swift; sourceTree = "<group>"; };
 		81B0DF011F27699300049E1C /* YLPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhoto.swift; sourceTree = "<group>"; };
 		81E56E601F28CF8300CE9DEA /* 3.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 3.gif; sourceTree = "<group>"; };
 		C04C4D4C948817C78C8A7B3C /* Pods-YLPhotoBrowser.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YLPhotoBrowser.release.xcconfig"; path = "Pods/Target Support Files/Pods-YLPhotoBrowser/Pods-YLPhotoBrowser.release.xcconfig"; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				79829DA21F26DEFE009D3F61 /* YLPopAnimator.swift */,
 				79829DA41F26E076009D3F61 /* YLDrivenInteractive.swift */,
 				81B0DF011F27699300049E1C /* YLPhoto.swift */,
+				79B26CA01F29AE7600568B4C /* YLPhotoProgressView.swift */,
 			);
 			path = YLPhotoBrowser;
 			sourceTree = "<group>";
@@ -260,6 +263,7 @@
 				79829D8A1F26D5A7009D3F61 /* ViewController.swift in Sources */,
 				79829D9D1F26D8F4009D3F61 /* YLPhotoBrowser.swift in Sources */,
 				79829D881F26D5A7009D3F61 /* AppDelegate.swift in Sources */,
+				79B26CA11F29AE7600568B4C /* YLPhotoProgressView.swift in Sources */,
 				79829DA31F26DEFE009D3F61 /* YLPopAnimator.swift in Sources */,
 				795744431F29743000411D2E /* YLPhotoCell.swift in Sources */,
 				79B26C9D1F29A23D00568B4C /* YLGifImage.swift in Sources */,
