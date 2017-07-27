@@ -11,6 +11,8 @@ import UIKit
 import SDWebImage
 
 let PhotoBrowserBG = UIColor.black
+let ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
+let ImageViewTag = 1000
 
 let YLScreenW = UIScreen.main.bounds.width
 let YLScreenH = UIScreen.main.bounds.height
@@ -25,8 +27,6 @@ class YLPhotoBrowser: UIViewController {
     
     fileprivate var collectionView:UICollectionView!
     fileprivate var pageControl:UIPageControl?
-    
-    fileprivate var imageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -82,7 +82,7 @@ class YLPhotoBrowser: UIViewController {
         
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(YLPhotoCell.self, forCellWithReuseIdentifier: "cell")
         
         collectionView.backgroundColor = UIColor.clear
         collectionView.isPagingEnabled = true
@@ -183,23 +183,25 @@ class YLPhotoBrowser: UIViewController {
                 
                 currentImageView?.transform = CGAffineTransform.init(scaleX: scale, y: scale)
                 
-                currentImageView?.center = CGPoint.init(x: imageViewCenter.x + translation.x * scale, y: imageViewCenter.y + translation.y * scale)
+                currentImageView?.center = CGPoint.init(x: ImageViewCenter.x + translation.x * scale, y: ImageViewCenter.y + translation.y * scale)
                 
                 break
             case .failed,.cancelled,.ended:
                 
                 if translation.y <= 80 {
                     UIView.animate(withDuration: 0.2, animations: {
-                        [weak self] in
-                        
-                        currentImageView?.center = (self?.imageViewCenter)!
+                    
+                        currentImageView?.center = ImageViewCenter
                         currentImageView?.transform = CGAffineTransform.init(scaleX: 1, y: 1)
                         }, completion: { (finished: Bool) in
                             
                             currentImageView?.transform = CGAffineTransform.identity
                             
                     })
-                    scrollView.delegate = self
+                    
+                    let cell = collectionView.cellForItem(at: IndexPath.init(row: currentIndex, section: 0))
+                    scrollView.delegate = cell as! UIScrollViewDelegate?
+                    
                 }else {
                     
                     currentImageView?.isHidden = true
@@ -215,7 +217,7 @@ class YLPhotoBrowser: UIViewController {
     }
     
     // 获取imageView frame
-    func getImageViewFrame(_ size: CGSize) -> CGRect {
+    class func getImageViewFrame(_ size: CGSize) -> CGRect {
         
         if size.width > YLScreenW {
             let height = YLScreenW * (size.height / size.width)
@@ -239,7 +241,7 @@ class YLPhotoBrowser: UIViewController {
         
         let cell = collectionView.cellForItem(at: IndexPath.init(row: currentIndex, section: 0))
         
-        if let imgView = cell?.viewWithTag(100) {
+        if let imgView = cell?.viewWithTag(ImageViewTag) {
             return imgView as? UIImageView
         }else {
             return nil
@@ -262,9 +264,9 @@ class YLPhotoBrowser: UIViewController {
         if currentImageView != nil {
             afterImgFrame = (currentImageView?.frame)!
         }else if photo.image != nil {
-            afterImgFrame = getImageViewFrame((photo.image?.size)!)
+            afterImgFrame = YLPhotoBrowser.getImageViewFrame((photo.image?.size)!)
         }else {
-            afterImgFrame = getImageViewFrame(CGSize.init(width: YLScreenW, height: YLScreenW))
+            afterImgFrame = YLPhotoBrowser.getImageViewFrame(CGSize.init(width: YLScreenW, height: YLScreenW))
         }
         
         appearAnimatedTransition = nil
@@ -292,64 +294,11 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        let cell: YLPhotoCell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! YLPhotoCell
         
-        for view in cell.subviews {
-            view.removeFromSuperview()
+        if let photo = photos?[indexPath.row] {
+            cell.updatePhoto(photo)
         }
-        
-        let photo = photos?[indexPath.row]
-        
-        let scrollView: UIScrollView = {
-            let sv = UIScrollView(frame: cell.bounds)
-            sv.showsHorizontalScrollIndicator = false
-            sv.showsVerticalScrollIndicator = false
-            sv.maximumZoomScale = 4.0
-            sv.minimumZoomScale = 1.0
-            sv.delegate = self
-            return sv
-        }()
-        
-        cell.addSubview(scrollView)
-        
-        let imageView = UIImageView()
-        imageView.backgroundColor = UIColor.init(red: 244/255.0, green: 244/255.0, blue: 244/255.0, alpha: 0.1)
-        
-        if photo?.imageUrl != "" {
-            
-            imageView.frame.size = CGSize.init(width: YLScreenW, height: YLScreenW)
-            imageView.center = imageViewCenter
-            
-            imageView.sd_setShowActivityIndicatorView(true)
-            imageView.sd_setIndicatorStyle(.white)
-            
-            var webImageOptions = SDWebImageOptions.retryFailed
-            webImageOptions.formUnion(SDWebImageOptions.progressiveDownload)
-            imageView.sd_setImage(with: URL(string: (photo?.imageUrl)!), placeholderImage: nil, options: webImageOptions, completed: { [weak self] (image:UIImage?, error:Error?, cacheType:SDImageCacheType, url:URL?) in
-                guard let img = image else {
-                    let image = UIImage.init(named: "load_error")
-                    imageView.frame = self?.getImageViewFrame((image?.size)!) ?? CGRect.zero
-                    imageView.image = image
-                    
-                    return
-                }
-                imageView.frame = (self?.getImageViewFrame(img.size))!
-                imageView.image = img
-                photo?.image = image
-            })
-        }else if photo?.image != nil {
-            
-            imageView.image = photo?.image
-            imageView.frame = getImageViewFrame((photo?.image?.size)!)
-            
-        }
-        
-        imageView.tag = 100
-        
-        imageView.contentMode = UIViewContentMode.scaleAspectFit
-        
-        scrollView.contentSize = imageView.frame.size
-        scrollView.addSubview(imageView)
         
         return cell
         
@@ -364,31 +313,5 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
             pageControl?.currentPage = currentIndex
         }
     }
-    
-    // 设置UIScrollView中要缩放的视图
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        if scrollView != collectionView {
-            return scrollView.viewWithTag(100)
-        }else {
-            return nil
-        }
-    }
-    
-    // 让UIImageView在UIScrollView缩放后居中显示
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        if scrollView != collectionView {
-            
-            let size = scrollView.bounds.size
-            
-            let offsetX = (size.width > scrollView.contentSize.width) ?
-                (size.width - scrollView.contentSize.width) * 0.5 : 0.0
-            
-            let offsetY = (size.height > scrollView.contentSize.height) ?
-                (size.height - scrollView.contentSize.height) * 0.5 : 0.0
-            
-            scrollView.viewWithTag(100)?.center = CGPoint.init(x: scrollView.contentSize.width * 0.5 + offsetX, y: scrollView.contentSize.height * 0.5 + offsetY)
-            
-        }
-    }
-    
+  
 }

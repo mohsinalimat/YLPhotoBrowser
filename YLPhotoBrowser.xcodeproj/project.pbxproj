@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4FAB20FFC845CE2DB099F594 /* Pods_YLPhotoBrowser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8A7DF9E07E129770E987270 /* Pods_YLPhotoBrowser.framework */; };
 		793A891C1F2841A600329CA8 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 793A891B1F2841A600329CA8 /* 1.png */; };
+		795744431F29743000411D2E /* YLPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795744421F29743000411D2E /* YLPhotoCell.swift */; };
 		79829D881F26D5A7009D3F61 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829D871F26D5A7009D3F61 /* AppDelegate.swift */; };
 		79829D8A1F26D5A7009D3F61 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829D891F26D5A7009D3F61 /* ViewController.swift */; };
 		79829D8F1F26D5A7009D3F61 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79829D8E1F26D5A7009D3F61 /* Assets.xcassets */; };
@@ -25,6 +26,7 @@
 
 /* Begin PBXFileReference section */
 		793A891B1F2841A600329CA8 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
+		795744421F29743000411D2E /* YLPhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhotoCell.swift; sourceTree = "<group>"; };
 		79829D841F26D5A7009D3F61 /* YLPhotoBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YLPhotoBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79829D871F26D5A7009D3F61 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		79829D891F26D5A7009D3F61 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				79829D9C1F26D8F4009D3F61 /* YLPhotoBrowser.swift */,
+				795744421F29743000411D2E /* YLPhotoCell.swift */,
 				79829D9E1F26DD9F009D3F61 /* YLAnimatedTransition.swift */,
 				79829DA01F26DECB009D3F61 /* YLPushAnimator.swift */,
 				79829DA21F26DEFE009D3F61 /* YLPopAnimator.swift */,
@@ -155,7 +158,7 @@
 				TargetAttributes = {
 					79829D831F26D5A7009D3F61 = {
 						CreatedOnToolsVersion = 8.2.1;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -251,6 +254,7 @@
 				79829D9D1F26D8F4009D3F61 /* YLPhotoBrowser.swift in Sources */,
 				79829D881F26D5A7009D3F61 /* AppDelegate.swift in Sources */,
 				79829DA31F26DEFE009D3F61 /* YLPopAnimator.swift in Sources */,
+				795744431F29743000411D2E /* YLPhotoCell.swift in Sources */,
 				79829DA51F26E076009D3F61 /* YLDrivenInteractive.swift in Sources */,
 				81B0DF021F27699300049E1C /* YLPhoto.swift in Sources */,
 			);
@@ -366,6 +370,7 @@
 			baseConfigurationReference = E745048318E5F1C65758906B /* Pods-YLPhotoBrowser.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = YLPhotoBrowser/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -380,6 +385,7 @@
 			baseConfigurationReference = C04C4D4C948817C78C8A7B3C /* Pods-YLPhotoBrowser.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = YLPhotoBrowser/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
