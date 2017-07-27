@@ -39,6 +39,26 @@ class YLPhotoBrowser: UIViewController {
         appearAnimatedTransition = nil
     }
     
+    // 是否支持屏幕旋转
+    override var shouldAutorotate: Bool {
+        return true
+    }
+    
+    // 监听设备方向改变
+    func deviceOrientationDidChange() {
+        
+        YLScreenW = UIScreen.main.bounds.width
+        YLScreenH = UIScreen.main.bounds.height
+        ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
+        
+        collectionView.reloadData()
+        
+        collectionView.scrollToItem(at: IndexPath.init(row: currentIndex, section: 0), at: UICollectionViewScrollPosition.left, animated: false)
+        
+        collectionView.isPagingEnabled = true
+        
+    }
+    
     // 初始化
     public convenience init(_ photos: [YLPhoto],index: Int) {
         self.init()
@@ -68,7 +88,7 @@ class YLPhotoBrowser: UIViewController {
         
         layoutUI()
         
-        collectionView.contentOffset.x = YLScreenW * CGFloat(currentIndex)
+        collectionView.scrollToItem(at: IndexPath.init(row: currentIndex, section: 0), at: UICollectionViewScrollPosition.init(rawValue: 0), animated: false)
         
         //感知设备方向 - 开启监听设备方向
         if !UIDevice.current.isGeneratingDeviceOrientationNotifications {
@@ -77,39 +97,15 @@ class YLPhotoBrowser: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(YLPhotoBrowser.deviceOrientationDidChange), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
     }
     
-    // 是否支持屏幕旋转
-    override var shouldAutorotate: Bool {
-        return true
-    }
-    
-    // 监听设备方向改变
-    func deviceOrientationDidChange() {
-    
-        YLScreenW = UIScreen.main.bounds.width
-        YLScreenH = UIScreen.main.bounds.height
-        ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
-        
-        collectionView.frame = view.bounds
-        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        layout.itemSize = CGSize(width: YLScreenW, height: YLScreenH)
-        collectionView.reloadData()
-        
-        collectionView.contentOffset.x = YLScreenW * CGFloat(currentIndex)
-        collectionView.isPagingEnabled = true
-        
-        pageControl?.center = CGPoint(x: YLScreenW / 2 , y: YLScreenH - 30)
-    }
-    
     // 绘制 UI
     private func layoutUI() {
         
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: YLScreenW, height: YLScreenH)
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
         layout.scrollDirection = UICollectionViewScrollDirection.horizontal
         
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         
         collectionView.register(YLPhotoCell.self, forCellWithReuseIdentifier: "cell")
         
@@ -121,10 +117,19 @@ class YLPhotoBrowser: UIViewController {
         
         view.addSubview(collectionView)
         
+        // collectionView 约束
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        let cConstraintsTop = NSLayoutConstraint.init(item: collectionView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
+        let cConstraintsLeft = NSLayoutConstraint.init(item: collectionView, attribute: NSLayoutAttribute.left, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.left, multiplier: 1, constant: 0)
+        let cConstraintsRight = NSLayoutConstraint.init(item: collectionView, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 0)
+        let cConstraintsBottom = NSLayoutConstraint.init(item: collectionView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
+        NSLayoutConstraint.activate([cConstraintsTop,cConstraintsLeft,cConstraintsRight,cConstraintsBottom])
+        
+        
+        
         if (photos?.count)! > 1 {
             
             pageControl = UIPageControl()
-            pageControl?.center = CGPoint(x: YLScreenW / 2 , y: YLScreenH - 30)
             pageControl?.pageIndicatorTintColor = UIColor.lightGray
             pageControl?.currentPageIndicatorTintColor = UIColor.white
             pageControl?.numberOfPages = (photos?.count)!
@@ -133,7 +138,15 @@ class YLPhotoBrowser: UIViewController {
             
             view.addSubview(pageControl!)
             
+            // pageControl 约束
+            pageControl?.translatesAutoresizingMaskIntoConstraints = false
+            let pConstraintsCenterX = NSLayoutConstraint.init(item: pageControl!, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0)
+            let pConstraintsBottom = NSLayoutConstraint.init(item: pageControl!, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: -30)
+            NSLayoutConstraint.activate([pConstraintsCenterX,pConstraintsBottom])
+            
         }
+        
+        view.layoutIfNeeded()
     }
     
     // 单击手势
@@ -340,7 +353,7 @@ class YLPhotoBrowser: UIViewController {
 }
 
 // MARK: - UICollectionViewDelegate,UICollectionViewDataSource
-extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
+extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -366,11 +379,14 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
         
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return collectionView.bounds.size
+    }
+    
     // 已经停止减速
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
         if scrollView == collectionView {
-            
             currentIndex = Int(scrollView.contentOffset.x / YLScreenW)
             pageControl?.currentPage = currentIndex
         }
