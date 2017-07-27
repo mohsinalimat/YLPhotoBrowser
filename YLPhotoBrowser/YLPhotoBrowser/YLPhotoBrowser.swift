@@ -11,11 +11,11 @@ import UIKit
 import Kingfisher
 
 let PhotoBrowserBG = UIColor.black
-let ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
 let ImageViewTag = 1000
 
-let YLScreenW = UIScreen.main.bounds.width
-let YLScreenH = UIScreen.main.bounds.height
+var ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
+var YLScreenW = UIScreen.main.bounds.width
+var YLScreenH = UIScreen.main.bounds.height
 
 class YLPhotoBrowser: UIViewController {
     
@@ -69,6 +69,35 @@ class YLPhotoBrowser: UIViewController {
         layoutUI()
         
         collectionView.contentOffset.x = YLScreenW * CGFloat(currentIndex)
+        
+        //感知设备方向 - 开启监听设备方向
+        if !UIDevice.current.isGeneratingDeviceOrientationNotifications {
+            UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        }
+        NotificationCenter.default.addObserver(self, selector: #selector(YLPhotoBrowser.deviceOrientationDidChange), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+    }
+    
+    // 是否支持屏幕旋转
+    override var shouldAutorotate: Bool {
+        return true
+    }
+    
+    // 监听设备方向改变
+    func deviceOrientationDidChange() {
+    
+        YLScreenW = UIScreen.main.bounds.width
+        YLScreenH = UIScreen.main.bounds.height
+        ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
+        
+        collectionView.frame = view.bounds
+        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        layout.itemSize = CGSize(width: YLScreenW, height: YLScreenH)
+        collectionView.reloadData()
+        
+        collectionView.contentOffset.x = YLScreenW * CGFloat(currentIndex)
+        collectionView.isPagingEnabled = true
+        
+        pageControl?.center = CGPoint(x: YLScreenW / 2 , y: YLScreenH - 30)
     }
     
     // 绘制 UI
@@ -221,28 +250,44 @@ class YLPhotoBrowser: UIViewController {
     // 获取imageView frame
     class func getImageViewFrame(_ size: CGSize) -> CGRect {
         
-        if size.width > YLScreenW {
-            let height = YLScreenW * (size.height / size.width)
-            if height <= YLScreenH {
-                
-                let frame = CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height)
-                
-                return frame
-                
-            }else {
-            
-                let frame = CGRect.init(x: 0, y: 0, width: YLScreenW, height: height)
-                
-                return frame
-            
-            }
-            
-            
-        }else {
-            let frame = CGRect.init(x: YLScreenW/2 - size.width/2, y: YLScreenH/2 - size.height/2, width: size.width, height: size.height)
-            return frame
-        }
+        if YLScreenW < YLScreenH {
         
+            if size.width > YLScreenW {
+                let height = YLScreenW * (size.height / size.width)
+                if height <= YLScreenH {
+                    
+                    let frame = CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height)
+                    return frame
+                }else {
+                    
+                    let frame = CGRect.init(x: 0, y: 0, width: YLScreenW, height: height)
+                    return frame
+                    
+                }
+            }else {
+                let frame = CGRect.init(x: YLScreenW/2 - size.width/2, y: YLScreenH/2 - size.height/2, width: size.width, height: size.height)
+                return frame
+            }
+        
+        }else {
+        
+            if size.height > YLScreenH {
+                let width = YLScreenH * (size.width / size.height)
+                if width <= YLScreenW {
+                    let frame = CGRect.init(x: YLScreenW/2 - width/2, y: 0, width: width, height: YLScreenH)
+                    return frame
+                }else {
+                    
+                    let frame = CGRect.init(x: 0, y: 0, width: width, height: YLScreenH)
+                    
+                    return frame
+                    
+                }
+            }else {
+                let frame = CGRect.init(x: YLScreenW/2 - size.width/2, y: YLScreenH/2 - size.height/2, width: size.width, height: size.height)
+                return frame
+            }
+        }
     }
     
     // 获取 currentImageView
@@ -330,5 +375,4 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource {
             pageControl?.currentPage = currentIndex
         }
     }
-  
 }

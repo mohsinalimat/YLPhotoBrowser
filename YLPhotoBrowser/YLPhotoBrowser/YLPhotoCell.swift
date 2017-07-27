@@ -33,7 +33,7 @@ class YLPhotoCell: UICollectionViewCell {
     
     // 进度条
     let progressView: YLPhotoProgressView = {
-        let p = YLPhotoProgressView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        let p = YLPhotoProgressView(frame: CGRect.zero)
         p.progress = 0
         p.isHidden = true
         return p
@@ -53,23 +53,26 @@ class YLPhotoCell: UICollectionViewCell {
         
         backgroundColor = UIColor.clear
         
-        scrollView.frame = self.bounds
         scrollView.delegate = self
         addSubview(scrollView)
         
         scrollView.addSubview(imageView)
         
         addSubview(progressView)
-        progressView.center = scrollView.center
+        
     }
     
     func updatePhoto(_ photo: YLPhoto) {
     
+        scrollView.frame = self.bounds
+        progressView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        progressView.center = scrollView.center
+        
         if photo.imageUrl != "" {
             
             imageView.frame.size = CGSize.init(width: YLScreenW, height: YLScreenW)
-            
             imageView.center = ImageViewCenter
+            
             imageView.image = photo.image
             
             progressView.isHidden = false
