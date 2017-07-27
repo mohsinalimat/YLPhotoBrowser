@@ -52,9 +52,7 @@ class YLPhotoBrowser: UIViewController {
         ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
         
         collectionView.reloadData()
-        
         collectionView.scrollToItem(at: IndexPath.init(row: currentIndex, section: 0), at: UICollectionViewScrollPosition.left, animated: false)
-        
         collectionView.isPagingEnabled = true
         
     }
@@ -373,6 +371,7 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
         
         if let photo = photos?[indexPath.row] {
             cell.updatePhoto(photo)
+            print(indexPath.row)
         }
         
         return cell
@@ -381,6 +380,10 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return collectionView.bounds.size
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return  UIEdgeInsets.init(top: 1, left: 1, bottom: 1, right: 1)
     }
     
     // 已经停止减速
