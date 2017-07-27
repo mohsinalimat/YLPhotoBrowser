@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataArray += ["1","2","3"]
+        dataArray += ["1.png","2.png","3.gif"]
         dataArray += ["http://ww2.sinaimg.cn/bmiddle/72635b6agw1eyqehvujq1j218g0p0qai.jpg",
                       "http://ww2.sinaimg.cn/bmiddle/e67669aagw1f1v6w3ya5vj20hk0qfq86.jpg",
                       "http://ww3.sinaimg.cn/bmiddle/61e36371gw1f1v6zegnezg207p06fqv6.gif",
@@ -77,9 +77,16 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
         imageView.tag = 100
         
         if indexPath.row <= 2 {
-        
-            let path = dataArray[indexPath.row]
-            imageView.image = UIImage.init(named: path)
+            
+            let imageName = dataArray[indexPath.row]
+            
+            if indexPath.row == 2 {
+                
+                imageView.image = UIImage.yl_gifAnimated(imageName)
+                
+            }else {
+                imageView.image = UIImage.init(named: imageName)
+            }
             
         }else {
             let url = dataArray[indexPath.row]
@@ -97,8 +104,6 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
         
         for i in 0...dataArray.count - 1 {
             
-            
-            
             let window = UIApplication.shared.keyWindow
             
             let cell = collectionView.cellForItem(at: IndexPath.init(row: i, section: 0))
@@ -106,15 +111,34 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
             let rect1 = cell?.convert(cell?.frame ?? CGRect.zero, from: collectionView)
             let rect2 = cell?.convert(rect1 ?? CGRect.zero, to: window)
             
-            if indexPath.row <= 2 {
-                let path = dataArray[i]
-                photos.append(YLPhoto.addImage(UIImage.init(named: path), imageUrl: nil, frame: rect2))
+            if i <= 2 {
+                
+                let imageName = dataArray[i]
+                
+                var image:UIImage?
+                
+                if i == 2 {
+                    // gif
+                    image = UIImage.yl_gifAnimated(imageName)
+                    
+                }else {
+                    // 非 gif
+                    image = UIImage.init(named: imageName)
+                }
+                
+                photos.append(YLPhoto.addImage(image, imageUrl: nil, frame: rect2))
                 
             }else {
-                // let imageView:UIImageView? = cell?.viewWithTag(100) as! UIImageView?
-                // photos.append(YLPhoto.addImage(imageView?.image, imageUrl: url, frame: rect2))
+                
                 let url = dataArray[i]
-                photos.append(YLPhoto.addImage(nil, imageUrl: url, frame: rect2))
+                
+                // 最佳
+                 let imageView:UIImageView? = cell?.viewWithTag(100) as! UIImageView?
+                 photos.append(YLPhoto.addImage(imageView?.image, imageUrl: url, frame: rect2))
+                
+                // 其次
+//                let url = dataArray[i]
+//                photos.append(YLPhoto.addImage(nil, imageUrl: url, frame: rect2))
             }
         }
         

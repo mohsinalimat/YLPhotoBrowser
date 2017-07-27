@@ -40,7 +40,7 @@ class YLPhotoBrowser: UIViewController {
     }
     
     // 初始化
-    convenience init(_ photos: [YLPhoto],index: Int) {
+    public convenience init(_ photos: [YLPhoto],index: Int) {
         self.init()
         
         self.photos = photos

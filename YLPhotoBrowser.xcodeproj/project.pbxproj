@@ -20,6 +20,8 @@
 		79829DA11F26DECB009D3F61 /* YLPushAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829DA01F26DECB009D3F61 /* YLPushAnimator.swift */; };
 		79829DA31F26DEFE009D3F61 /* YLPopAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829DA21F26DEFE009D3F61 /* YLPopAnimator.swift */; };
 		79829DA51F26E076009D3F61 /* YLDrivenInteractive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829DA41F26E076009D3F61 /* YLDrivenInteractive.swift */; };
+		79B26C9D1F29A23D00568B4C /* YLGifImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B26C9C1F29A23D00568B4C /* YLGifImage.swift */; };
+		79B26C9F1F29A37F00568B4C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79B26C9E1F29A37F00568B4C /* MobileCoreServices.framework */; };
 		81B0DF021F27699300049E1C /* YLPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81B0DF011F27699300049E1C /* YLPhoto.swift */; };
 		81E56E611F28CF8300CE9DEA /* 3.gif in Resources */ = {isa = PBXBuildFile; fileRef = 81E56E601F28CF8300CE9DEA /* 3.gif */; };
 /* End PBXBuildFile section */
@@ -39,6 +41,8 @@
 		79829DA01F26DECB009D3F61 /* YLPushAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPushAnimator.swift; sourceTree = "<group>"; };
 		79829DA21F26DEFE009D3F61 /* YLPopAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPopAnimator.swift; sourceTree = "<group>"; };
 		79829DA41F26E076009D3F61 /* YLDrivenInteractive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLDrivenInteractive.swift; sourceTree = "<group>"; };
+		79B26C9C1F29A23D00568B4C /* YLGifImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLGifImage.swift; sourceTree = "<group>"; };
+		79B26C9E1F29A37F00568B4C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		81B0DF011F27699300049E1C /* YLPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhoto.swift; sourceTree = "<group>"; };
 		81E56E601F28CF8300CE9DEA /* 3.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 3.gif; sourceTree = "<group>"; };
 		C04C4D4C948817C78C8A7B3C /* Pods-YLPhotoBrowser.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YLPhotoBrowser.release.xcconfig"; path = "Pods/Target Support Files/Pods-YLPhotoBrowser/Pods-YLPhotoBrowser.release.xcconfig"; sourceTree = "<group>"; };
@@ -51,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79B26C9F1F29A37F00568B4C /* MobileCoreServices.framework in Frameworks */,
 				4FAB20FFC845CE2DB099F594 /* Pods_YLPhotoBrowser.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				79829D9C1F26D8F4009D3F61 /* YLPhotoBrowser.swift */,
+				79B26C9C1F29A23D00568B4C /* YLGifImage.swift */,
 				795744421F29743000411D2E /* YLPhotoCell.swift */,
 				79829D9E1F26DD9F009D3F61 /* YLAnimatedTransition.swift */,
 				79829DA01F26DECB009D3F61 /* YLPushAnimator.swift */,
@@ -118,6 +124,7 @@
 		E88C5E6DF3C284514B77E149 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				79B26C9E1F29A37F00568B4C /* MobileCoreServices.framework */,
 				D8A7DF9E07E129770E987270 /* Pods_YLPhotoBrowser.framework */,
 			);
 			name = Frameworks;
@@ -255,6 +262,7 @@
 				79829D881F26D5A7009D3F61 /* AppDelegate.swift in Sources */,
 				79829DA31F26DEFE009D3F61 /* YLPopAnimator.swift in Sources */,
 				795744431F29743000411D2E /* YLPhotoCell.swift in Sources */,
+				79B26C9D1F29A23D00568B4C /* YLGifImage.swift in Sources */,
 				79829DA51F26E076009D3F61 /* YLDrivenInteractive.swift in Sources */,
 				81B0DF021F27699300049E1C /* YLPhoto.swift in Sources */,
 			);

@@ -66,9 +66,6 @@ class YLPhotoCell: UICollectionViewCell {
             }, completionHandler: { [weak self] (image:Image?, _, _, _) in
             
                 guard let img = image else {
-                    let image = UIImage.init(named: "load_error")
-                    self?.imageView.frame = YLPhotoBrowser.getImageViewFrame(image?.size ?? CGSize.zero)
-                    self?.imageView.image = image
                     
                     return
                 }
