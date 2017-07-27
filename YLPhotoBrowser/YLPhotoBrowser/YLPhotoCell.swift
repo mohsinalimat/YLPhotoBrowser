@@ -67,28 +67,34 @@ class YLPhotoCell: UICollectionViewCell {
     
         if photo.imageUrl != "" {
             
-            imageView.frame.size = CGSize.init(width: YLScreenW - 40, height: YLScreenW - 40)
+            imageView.frame.size = CGSize.init(width: YLScreenW, height: YLScreenW)
+            
             imageView.center = ImageViewCenter
+            imageView.image = photo.image
             
             progressView.isHidden = false
             
-            imageView.kf.setImage(with: URL(string: photo.imageUrl), placeholder: nil, options: [.transition(.fade(1))], progressBlock: { [weak self](receivedSize:Int64, totalSize:Int64) in
-            
+            KingfisherManager.shared.retrieveImage(with: URL(string: photo.imageUrl)!, options: [.transition(.fade(1))], progressBlock: { [weak self] (receivedSize:Int64, totalSize:Int64) in
+                
                 self?.progressView.progress = CGFloat(receivedSize) / CGFloat(totalSize)
                 
             }, completionHandler: { [weak self] (image:Image?, _, _, _) in
-            
+                
                 self?.progressView.isHidden = true
                 
                 guard let img = image else {
                     
                     return
                 }
-                self?.imageView.frame = YLPhotoBrowser.getImageViewFrame(img.size)
+                
+                UIView.animate(withDuration: 0.3, animations: {
+                    self?.imageView.frame = YLPhotoBrowser.getImageViewFrame(img.size)
+                })
                 self?.imageView.image = img
                 photo.image = image
                 
                 self?.scrollView.contentSize = self?.imageView.frame.size ?? CGSize.zero
+                
             })
             
         }else if let image = photo.image {
