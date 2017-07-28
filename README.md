@@ -1,8 +1,8 @@
 # YLPhotoBrowser
 
-    仿微信图片浏览器                                         
+    仿微信图片浏览器(定义转场动画、支持本地和网络gif、拖拽取消）                                     
 
-    ![image](https://github.com/February12/YLPhotoBrowser/tree/master/RImage/动画.gif)
+    ![image](https://github.com/February12/YLPhotoBrowser/tree/master/READMEShow/动画.gif)
 
 
 # 使用  简单易用,拖拽取消
