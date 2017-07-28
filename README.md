@@ -5,10 +5,12 @@
     ![image](https://github.com/February12/YLPhotoBrowser/tree/master/READMEShow/动画.gif)
 
 
-# 使用  简单易用,拖拽取消                                          
-    var photos = [YLPhoto]()                                                              
-    photos.append(YLPhoto.addImage(image, imageUrl: nil, frame: rect2))
-    let photoBrowser = YLPhotoBrowser.init(photos, index: indexPath.row)
+# 使用  简单易用,拖拽取消                                                          
+    
+    # 使用
+    var photos = [YLPhoto]()                                                                               
+    photos.append(YLPhoto.addImage(image, imageUrl: nil, frame: rect2))                                    
+    let photoBrowser = YLPhotoBrowser.init(photos, index: indexPath.row)                              
     present(photoBrowser, animated: true, completion: nil)
 
 # 教程       
