@@ -56,6 +56,15 @@ class YLPhotoCell: UICollectionViewCell {
         scrollView.delegate = self
         addSubview(scrollView)
         
+        // scrollView 约束
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        let sConstraintsTop = NSLayoutConstraint.init(item: scrollView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
+        let sConstraintsLeft = NSLayoutConstraint.init(item: scrollView, attribute: NSLayoutAttribute.left, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.left, multiplier: 1, constant: 0)
+        let sConstraintsRight = NSLayoutConstraint.init(item: scrollView, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 0)
+        let sConstraintsBottom = NSLayoutConstraint.init(item: scrollView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
+        NSLayoutConstraint.activate([sConstraintsTop,sConstraintsLeft,sConstraintsRight,sConstraintsBottom])
+        
+        
         scrollView.addSubview(imageView)
         
         addSubview(progressView)
@@ -64,9 +73,10 @@ class YLPhotoCell: UICollectionViewCell {
     
     func updatePhoto(_ photo: YLPhoto) {
     
-        scrollView.frame = self.bounds
         progressView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         progressView.center = scrollView.center
+        
+        imageView.image = nil
         
         if photo.imageUrl != "" {
             

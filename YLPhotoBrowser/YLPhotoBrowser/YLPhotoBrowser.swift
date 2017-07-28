@@ -35,6 +35,7 @@ class YLPhotoBrowser: UIViewController {
     }
     
     deinit {
+        removeObserver(self, forKeyPath: "view.frame")
         transitioningDelegate = nil
         appearAnimatedTransition = nil
     }
@@ -42,19 +43,6 @@ class YLPhotoBrowser: UIViewController {
     // 是否支持屏幕旋转
     override var shouldAutorotate: Bool {
         return true
-    }
-    
-    // 监听设备方向改变
-    func deviceOrientationDidChange() {
-        
-        YLScreenW = UIScreen.main.bounds.width
-        YLScreenH = UIScreen.main.bounds.height
-        ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
-        
-        collectionView.reloadData()
-        collectionView.scrollToItem(at: IndexPath.init(row: currentIndex, section: 0), at: UICollectionViewScrollPosition.left, animated: false)
-        collectionView.isPagingEnabled = true
-        
     }
     
     // 初始化
@@ -67,6 +55,23 @@ class YLPhotoBrowser: UIViewController {
         let photo = photos[index]
         
         editTransitioningDelegate(photo)
+    }
+    
+    // 键盘 View frame 改变
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        
+        if keyPath == "view.frame" {
+        
+            YLScreenW = view.bounds.width
+            YLScreenH = view.bounds.height
+            ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
+            
+            collectionView.reloadData()
+            
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.05) { [weak self] in
+                self?.collectionView.scrollToItem(at: IndexPath.init(row: self?.currentIndex ?? 0, section: 0), at: UICollectionViewScrollPosition.left, animated: false)
+            }
+        }
     }
     
     override func viewDidLoad() {
@@ -86,13 +91,10 @@ class YLPhotoBrowser: UIViewController {
         
         layoutUI()
         
-        collectionView.scrollToItem(at: IndexPath.init(row: currentIndex, section: 0), at: UICollectionViewScrollPosition.init(rawValue: 0), animated: false)
+        collectionView.scrollToItem(at: IndexPath.init(row: currentIndex, section: 0), at: UICollectionViewScrollPosition.left, animated: false)
         
-        //感知设备方向 - 开启监听设备方向
-        if !UIDevice.current.isGeneratingDeviceOrientationNotifications {
-            UIDevice.current.beginGeneratingDeviceOrientationNotifications()
-        }
-        NotificationCenter.default.addObserver(self, selector: #selector(YLPhotoBrowser.deviceOrientationDidChange), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        addObserver(self, forKeyPath: "view.frame", options: NSKeyValueObservingOptions.old, context: nil)
+        
     }
     
     // 绘制 UI
@@ -122,8 +124,6 @@ class YLPhotoBrowser: UIViewController {
         let cConstraintsRight = NSLayoutConstraint.init(item: collectionView, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 0)
         let cConstraintsBottom = NSLayoutConstraint.init(item: collectionView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
         NSLayoutConstraint.activate([cConstraintsTop,cConstraintsLeft,cConstraintsRight,cConstraintsBottom])
-        
-        
         
         if (photos?.count)! > 1 {
             
@@ -171,7 +171,14 @@ class YLPhotoBrowser: UIViewController {
             let scrollView = currentImageView?.superview as! UIScrollView
             if scrollView.zoomScale == 1 {
                 
-                var scale = YLScreenH / (currentImageView?.frame.size.height ?? YLScreenH)
+                var scale:CGFloat = 0
+                
+                if YLScreenW < YLScreenH {
+                    scale = YLScreenH / (currentImageView?.frame.size.height ?? YLScreenH)
+                }else {
+                    scale = YLScreenW / (currentImageView?.frame.size.width ?? YLScreenW)
+                }
+                
                 scale = scale > 4 ? 4: scale
                 scale = scale < 1 ? 2: scale
                 
@@ -371,7 +378,6 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
         
         if let photo = photos?[indexPath.row] {
             cell.updatePhoto(photo)
-            print(indexPath.row)
         }
         
         return cell
@@ -379,11 +385,8 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return collectionView.bounds.size
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return  UIEdgeInsets.init(top: 1, left: 1, bottom: 1, right: 1)
+        
+        return CGSize.init(width: YLScreenW, height: YLScreenH)
     }
     
     // 已经停止减速
