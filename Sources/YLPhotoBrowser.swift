@@ -17,7 +17,7 @@ var ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
 var YLScreenW = UIScreen.main.bounds.width
 var YLScreenH = UIScreen.main.bounds.height
 
-class YLPhotoBrowser: UIViewController {
+open class YLPhotoBrowser: UIViewController {
     
     fileprivate var photos: [YLPhoto]? // 图片
     fileprivate var currentIndex: Int = 0 // 当前row
@@ -28,7 +28,7 @@ class YLPhotoBrowser: UIViewController {
     fileprivate var collectionView:UICollectionView!
     fileprivate var pageControl:UIPageControl?
     
-    override func viewDidDisappear(_ animated: Bool) {
+    override open func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
         disappearAnimatedTransition = nil
@@ -41,7 +41,7 @@ class YLPhotoBrowser: UIViewController {
     }
     
     // 是否支持屏幕旋转
-    override var shouldAutorotate: Bool {
+    override open var shouldAutorotate: Bool {
         return true
     }
     
@@ -58,7 +58,7 @@ class YLPhotoBrowser: UIViewController {
     }
     
     // 键盘 View frame 改变
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
         if keyPath == "view.frame" {
         
@@ -74,7 +74,7 @@ class YLPhotoBrowser: UIViewController {
         }
     }
     
-    override func viewDidLoad() {
+    override open func viewDidLoad() {
         
         view.backgroundColor = PhotoBrowserBG
         
@@ -360,11 +360,11 @@ class YLPhotoBrowser: UIViewController {
 // MARK: - UICollectionViewDelegate,UICollectionViewDataSource
 extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let photos = self.photos {
             return photos.count
         }else {
@@ -372,7 +372,7 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell: YLPhotoCell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! YLPhotoCell
         
@@ -384,13 +384,13 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
         
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         return CGSize.init(width: YLScreenW, height: YLScreenH)
     }
     
     // 已经停止减速
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
         if scrollView == collectionView {
             currentIndex = Int(scrollView.contentOffset.x / YLScreenW)

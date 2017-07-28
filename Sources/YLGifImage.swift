@@ -10,7 +10,7 @@ import UIKit
 import ImageIO
 import MobileCoreServices
 
-extension UIImage {
+public extension UIImage {
 
     // 获取本地gif name 带后缀 如  1.gif
     public class func yl_gifAnimated(_ name: String) -> UIImage? {
