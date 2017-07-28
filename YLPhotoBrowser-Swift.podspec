@@ -18,7 +18,10 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
   s.platform     = :ios, '8.0'
-  s.source_files = 'YLPhotoBrowser/YLPhotoBrowser/**/*'
+  s.source_files = ['YLPhotoBrowser/YLPhotoBrowser/*.swift']
+  s.public_header_files = ["YLPhotoBrowser/YLPhotoBrowser/YLPhotoBrowser.swift",
+                          "YLPhotoBrowser/YLPhotoBrowser/YLPhoto.swift",
+                          "YLPhotoBrowser/YLPhotoBrowser/YLGifImage.swift",]
 
   s.requires_arc = true
   s.framework = "MobileCoreServices"
