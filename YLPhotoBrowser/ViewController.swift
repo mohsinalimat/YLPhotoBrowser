@@ -27,7 +27,7 @@ class ViewController: UIViewController {
                       "http://ww4.sinaimg.cn/bmiddle/7f02d774gw1f1dxhgmh3mj20cs1tdaiv.jpg"]
         
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: view.bounds.width / 3 - 10, height: view.bounds.height / 3 - 20)
+        layout.itemSize = CGSize(width: view.bounds.width / 3 - 10, height: view.bounds.width / 3 - 20)
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 10
         
