@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name             = 'YLPhotoBrowser'
+  s.name             = 'YLPhotoBrowser-Swift'
   #版本号，默认从0.1.0开始
   s.version          = '0.1.0'
   s.summary          = '仿微信图片浏览器(定义转场动画、支持本地和网络gif、拖拽取消）'
