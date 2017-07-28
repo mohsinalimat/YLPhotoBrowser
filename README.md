@@ -1,7 +1,7 @@
 # YLPhotoBrowser  
 ~~~~
     仿微信图片浏览器(定义转场动画、支持本地和网络gif、拖拽取消）  
-    ![image](https://github.com/February12/YLPhotoBrowser/blob/master/READMEShow/an.png)  
+    
    
 # 导入
     pod 'YLPhotoBrowser-Swift' 
