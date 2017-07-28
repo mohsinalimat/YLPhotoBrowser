@@ -4,10 +4,8 @@
 
     ![image](https://github.com/February12/YLPhotoBrowser/tree/master/READMEShow/动画.gif)
 
-# 导入                                                                
-    pod 'YLPhotoBrowser-Swift'
-
-# 使用  简单易用,拖拽取消                                                                                     
+# 使用  简单易用,拖拽取消
+    pod 'YLPhotoBrowser-Swift'                             
     var photos = [YLPhoto]()                                                                                          
     photos.append(YLPhoto.addImage(image, imageUrl: nil, frame: rect2))                                                    
     let photoBrowser = YLPhotoBrowser.init(photos, index: indexPath.row)                                      
