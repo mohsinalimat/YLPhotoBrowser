@@ -14,7 +14,6 @@
 		79829D8F1F26D5A7009D3F61 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79829D8E1F26D5A7009D3F61 /* Assets.xcassets */; };
 		79829D921F26D5A7009D3F61 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79829D901F26D5A7009D3F61 /* LaunchScreen.storyboard */; };
 		79829D9B1F26D83E009D3F61 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 79829D9A1F26D83E009D3F61 /* 2.png */; };
-		79B26C9F1F29A37F00568B4C /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79B26C9E1F29A37F00568B4C /* MobileCoreServices.framework */; };
 		81E56E611F28CF8300CE9DEA /* 3.gif in Resources */ = {isa = PBXBuildFile; fileRef = 81E56E601F28CF8300CE9DEA /* 3.gif */; };
 /* End PBXBuildFile section */
 
@@ -39,7 +38,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				79B26C9F1F29A37F00568B4C /* MobileCoreServices.framework in Frameworks */,
 				4FAB20FFC845CE2DB099F594 /* Pods_YLPhotoBrowser.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
