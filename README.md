@@ -7,7 +7,6 @@
 
 # 使用  简单易用,拖拽取消                                                          
     
-    # 使用
     var photos = [YLPhoto]()                                                                               
     photos.append(YLPhoto.addImage(image, imageUrl: nil, frame: rect2))                                    
     let photoBrowser = YLPhotoBrowser.init(photos, index: indexPath.row)                              
