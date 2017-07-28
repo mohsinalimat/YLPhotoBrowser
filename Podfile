@@ -9,7 +9,7 @@ use_frameworks!
 # Pods for YLPhotoBrowser
 
 
-pod 'Kingfisher', '~> 3.10.2'
+pod 'YLPhotoBrowser-Swift'
 
 
 end

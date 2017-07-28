@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class YLPhoto {
+class YLPhoto {
     
     var image: UIImage? // 图片
     var frame: CGRect?  // 在屏幕上的位置
