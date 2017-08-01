@@ -1,4 +1,9 @@
 # YLPhotoBrowser  
+
+
+样式Gif:[http://upload-images.jianshu.io/upload_images/6327326-1a067526d30d6204.gif](http://upload-images.jianshu.io/upload_images/6327326-1a067526d30d6204.gif)
+
+
 ~~~~
     仿微信图片浏览器(定义转场动画、支持本地和网络gif、拖拽取消）  
     
